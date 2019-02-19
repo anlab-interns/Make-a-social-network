@@ -1,2 +1,2 @@
 # Make-a-social-network
-Usu framework laravel to built a social network
+Use laravel to built a social network
