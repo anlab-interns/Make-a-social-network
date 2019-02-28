@@ -11,6 +11,7 @@ class PostController extends Controller
 {
 	 public function getDashboard()
     {
+        // Lấy ra tất cả các post được sắp xếp theo thời gian khởi tạo và giảm dần
     	$posts= Post::orderBy('created_at','desc')->get();
     	return view('dashboard', ['posts' => $posts]);
     }
