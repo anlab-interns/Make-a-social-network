@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 //Route::post('/signup', [
 //    'uses' => 'UserController@postSignUp',
@@ -29,30 +29,30 @@ Route::get('/', function () {
 //    'as' => 'signin'
 //]);
 //
-//Route::get('/logout', [
-//	'uses' => 'UserController@getLogout',
-//	'as' => 'logout'
-//]);
-//
-//Route::get('/dashboard', [
-//    'uses' => 'PostController@getDashBoard',
-//    'as' => 'dashboard',
-//])->middleware('auth');
-//
-//Route::post('/createpost', [
-//	'uses' => 'PostController@postCreatePost',
-//	'as' => 'post.create'
-//])->middleware('auth');
-//
-//Route::post('/edit', [
-//	'uses' => 'PostController@postEditPost',
-//	'as' => 'edit'
-//]);
-//
-//Route::get('/delete-post/{post_id}',[
-//	'uses' => 'PostController@getDeletePost',
-//	'as' => 'post.delete'
-//])->middleware('auth');
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect()->route('welcome');
+});
+
+Route::get('/dashboard', [
+    'uses' => 'PostController@getDashBoard',
+    'as' => 'dashboard',
+])->middleware('auth');
+
+Route::post('/createpost', [
+    'uses' => 'PostController@postCreatePost',
+    'as' => 'post.create'
+])->middleware('auth');
+
+Route::post('/edit', [
+    'uses' => 'PostController@postEditPost',
+    'as' => 'edit'
+]);
+
+Route::get('/delete-post/{post_id}', [
+    'uses' => 'PostController@getDeletePost',
+    'as' => 'post.delete'
+])->middleware('auth');
 
 Auth::routes();
 

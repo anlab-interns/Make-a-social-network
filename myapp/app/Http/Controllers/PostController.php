@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class PostController extends Controller
 {
@@ -18,12 +17,17 @@ class PostController extends Controller
 
     public function postCreatePost(Request $request)
     {
+        // set validation rules
         $this->validate($request, [
             'body'=>'required|max:1000'
         ]);
+
+        // Tạo đối tượng post mới rồi gán body bằng data của request
     	$post=new Post();
     	$post->body=$request['body'];
     	$message = 'There was an error';
+
+        // Kiểm tra xem post đã được lưu vào database hay chưa
         if ($request->user()->posts()->save($post)) {
             $message = 'Post successfully created!';
         }
