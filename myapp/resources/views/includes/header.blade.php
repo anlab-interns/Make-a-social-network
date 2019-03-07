@@ -9,7 +9,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">My Social Network</a>
+                <a class="navbar-brand" href="{{route('welcome')}}">My Social Network</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->

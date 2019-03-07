@@ -7,11 +7,14 @@
  */
 
 namespace App\Http\Controllers\Auth;
-use App\User;
+
 use App\Http\Controllers\Controller;
+use App\Profile;
+use App\User;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
+
 class RegisterController extends Controller
 {
     /*
@@ -62,10 +65,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $pic_path = 'http://127.0.0.1:8000/images/Boy-PNG-HD.png';
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'picture_path' => $pic_path,
         ]);
+        Profile::create(['user_id' => $user->id]);
+        return $user;
     }
 }

@@ -33,26 +33,37 @@ Route::get('/logout', function () {
     Auth::logout();
     return redirect()->route('welcome');
 });
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/dashboard', [
+        'uses' => 'PostController@getDashBoard',
+        'as' => 'dashboard',
+    ]);
+    Route::post('/createpost', [
+        'uses' => 'PostController@postCreatePost',
+        'as' => 'post.create'
+    ]);
+    Route::get('/delete-post/{post_id}', [
+        'uses' => 'PostController@getDeletePost',
+        'as' => 'post.delete'
+    ]);
+    Route::get('/profile', 'ProfileController@index')->name('profile');
+});
 
-Route::get('/dashboard', [
-    'uses' => 'PostController@getDashBoard',
-    'as' => 'dashboard',
-])->middleware('auth');
-
-Route::post('/createpost', [
-    'uses' => 'PostController@postCreatePost',
-    'as' => 'post.create'
-])->middleware('auth');
 
 Route::post('/edit', [
     'uses' => 'PostController@postEditPost',
     'as' => 'edit'
 ]);
 
-Route::get('/delete-post/{post_id}', [
-    'uses' => 'PostController@getDeletePost',
-    'as' => 'post.delete'
-])->middleware('auth');
+Route::get('/changePhoto', function () {
+    return view('profile.photo')->with('data', Auth::user()->profile);
+})->name('changePhoto');
+
+Route::post('/updatePhoto', 'ProfileController@updatePhoto')->name('updatePhoto');
+
+Route::get('/editProfile', 'ProfileController@editProfile')->name('editProfile');
+
+Route::post('updateProfile', 'ProfileController@updateProfile')->name('updateProfile');
 
 Auth::routes();
 
