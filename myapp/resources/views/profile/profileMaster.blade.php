@@ -56,6 +56,18 @@
                             </li>
                         @endif
                     @else
+                        <li>
+                            <a href="">
+                                @if ((Auth::user()->picture_path == ''))
+                                    <img class="row rounded-circle" align="center" style="margin:auto"
+                                         src="../../../public/images/male.png" width="30px" height="30px">
+                                @else
+                                    <img class="row rounded-circle" align="center" style="margin:auto"
+                                         src="../../public/images/{{Auth::user()->picture_path}}" width="50px"
+                                         height="50px">
+                                @endIf
+                            </a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

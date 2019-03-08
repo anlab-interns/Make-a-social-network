@@ -19,16 +19,6 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-//Route::post('/signup', [
-//    'uses' => 'UserController@postSignUp',
-//    'as' => 'signup'
-//]);
-//
-//Route::post('/signin', [
-//    'uses' => 'UserController@postSignIn',
-//    'as' => 'signin'
-//]);
-//
 Route::get('/logout', function () {
     Auth::logout();
     return redirect()->route('welcome');
@@ -38,15 +28,19 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'PostController@getDashBoard',
         'as' => 'dashboard',
     ]);
+
     Route::post('/createpost', [
         'uses' => 'PostController@postCreatePost',
         'as' => 'post.create'
     ]);
+
     Route::get('/delete-post/{post_id}', [
         'uses' => 'PostController@getDeletePost',
         'as' => 'post.delete'
     ]);
     Route::get('/profile', 'ProfileController@index')->name('profile');
+
+    Route::get('/findFriends', 'ProfileController@findFriends')->name('findFriend');
 });
 
 
@@ -65,6 +59,11 @@ Route::get('/editProfile', 'ProfileController@editProfile')->name('editProfile')
 
 Route::post('updateProfile', 'ProfileController@updateProfile')->name('updateProfile');
 
+Route::get('/test', function () {
+    return Auth::user()->test();
+});
+
+Route::get('/addFriend/{id}', 'ProfileController@addFriend')->name('addFriend');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

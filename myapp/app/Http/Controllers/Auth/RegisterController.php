@@ -65,7 +65,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $pic_path = 'http://127.0.0.1:8000/images/Boy-PNG-HD.png';
+        $pic_path = '';
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
