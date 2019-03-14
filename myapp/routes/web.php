@@ -44,9 +44,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/requests', 'ProfileController@requests')->name('requests');
 
-    Route::get('/accept/{id}', 'ProfileController@accept')->name('acceptFriend');
+    Route::get('/accept/{id}/{name}', 'ProfileController@accept')->name('acceptFriend');
 
-//    Route::get('/friends', 'ProfileController@friends')->name('friends');
+    Route::get('/friends', 'ProfileController@friends')->name('friends');
+
+    Route::get('/requestRemove/{id}', 'ProfileController@requestRemove')->name('requestRemove');
+
+    Route::get('/removeFriend/{id}', 'ProfileController@removeFriend')->name('removeFriend');
 });
 
 

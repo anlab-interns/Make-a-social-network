@@ -45,9 +45,11 @@
                                     </p>
                                 </div>
                                 <div class="figure-caption" align="center">
-                                    <p><a href="{{route('acceptFriend',[$ulist->id])}}" class="btn btn-info">Confirm</a>
+                                    <p><a href="{{route('acceptFriend',[$ulist->id, $ulist->name])}}"
+                                          class="btn btn-info">Confirm</a>
                                     </p>
-                                    <p><a href="" class="btn btn-success">Remove</a>
+                                    <p><a href="{{route('requestRemove',[$ulist->id])}}"
+                                          class="btn btn-success">Remove</a>
                                     </p>
 
                                 </div>
