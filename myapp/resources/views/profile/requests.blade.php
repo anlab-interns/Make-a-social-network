@@ -23,43 +23,34 @@
                     </div>
 
                     <div class="card-body">
-                        @if (session('status'))
+                        @if (session()->has('msg'))
                             <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
+                                {{ session()->get('msg') }}
                             </div>
                         @endif
-                        <div class="col-sm-12 col-md-12"></div>
-                        @foreach($all_users as $ulist)
-                            <div class="row " style="border-bottom:1px solid #ccc; margin-bottom:15px">
+                        @foreach($friend_request as $ulist)
+                            <div class="row "
+                                 style="border-bottom:1px solid #ccc; margin-bottom:15px; padding-bottom: 10px">
                                 <div class="col-md-2">
                                     <img class="row rounded-circle" style="margin:auto"
                                          src="../../public/images/{{$ulist->picture_path}}" width="80px"
                                          height="80px">
                                 </div>
                                 <div class="col-md-7 float-left">
-                                    <p style="margin: 0px"><a
+
+                                    <p style="margin: 0px">
+                                        <a
                                                 href="{{route('profile')}}/{{$ulist->id}}">{{ucwords($ulist->name)}}</a>
-                                    <p style="margin: 0px">{{$ulist->cty}} - {{$ulist->country}}</p>
-                                    <p style="margin: 0px">{{$ulist->about}}</p>
+                                    <p style="margin: 0px"><b>{{$ulist->email}}</b></p>
                                     </p>
                                 </div>
-                                <?php
-                                $check = DB::table('friends')
-                                    ->where('user_requested', '=', $ulist->id)
-                                    ->where('requester', '=', Auth::user()->id)
-                                    ->first();
-                                ;
-                                if($check == ''){
-                                ?>
+                                <div class="figure-caption" align="center">
+                                    <p><a href="{{route('acceptFriend',[$ulist->id])}}" class="btn btn-info">Confirm</a>
+                                    </p>
+                                    <p><a href="" class="btn btn-success">Remove</a>
+                                    </p>
 
-                                    <div class="figure-caption" align="center">
-                                        <p><a href="{{route('addFriend',[$ulist->id])}}" class="btn btn-info">Add
-                                                friend</a></p>
-
-                                    </div>
-                                <?php } else {?>
-                                <p>Request Already Send</p>
-                                <?php } ?>
+                                </div>
                             </div>
                         @endforeach
                         <div class="col-sm-12 col-md-12">

@@ -3,7 +3,7 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="{{route('welcome')}}">Home</a></li>
+                <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item active"><a href="{{url('/profile')}}/{{Auth::user()->slug}}">Profile</a></li>
                 <li class="breadcrumb-item active"><a href="{{url('/editProfile')}}/{{Auth::user()->slug}}">Edit
                         profile</a></li>

@@ -41,6 +41,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/profile', 'ProfileController@index')->name('profile');
 
     Route::get('/findFriends', 'ProfileController@findFriends')->name('findFriend');
+
+    Route::get('/requests', 'ProfileController@requests')->name('requests');
+
+    Route::get('/accept/{id}', 'ProfileController@accept')->name('acceptFriend');
+
+//    Route::get('/friends', 'ProfileController@friends')->name('friends');
 });
 
 

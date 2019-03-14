@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -41,6 +42,15 @@
                     <a class="navbar-brand" href="{{ url('/profile') }}">
                         Profile
                     </a>
+                    <a class="navbar-brand" href="{{route('findFriend') }}">
+                        Find Friend
+                    </a>
+                    <li><a class="navbar-brand" href="{{route('requests') }}">
+                            My Request({{App\Http\Controllers\ProfileController::requestCount()}})
+                        </a></li>
+                    {{--<li><a class="navbar-brand" href="{{route('friends') }}">--}}
+                    {{--Friend--}}
+                    {{--</a></li>--}}
                 </ul>
 
                 <!-- Right Side Of Navbar -->
