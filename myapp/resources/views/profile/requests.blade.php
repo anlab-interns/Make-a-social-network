@@ -32,9 +32,14 @@
                             <div class="row "
                                  style="border-bottom:1px solid #ccc; margin-bottom:15px; padding-bottom: 10px">
                                 <div class="col-md-2">
-                                    <img class="row rounded-circle" style="margin:auto"
-                                         src="../../public/images/{{$ulist->picture_path}}" width="80px"
-                                         height="80px">
+                                    @if (($ulist->picture_path == ''))
+                                        <img class="row rounded-circle" align="center" style="margin:auto"
+                                             src="{{asset('storage/male.png')}}" width="80px" height="80px">
+                                    @else
+                                        <img class="row rounded-circle" style="margin:auto"
+                                             src="../../public/images/{{$ulist->picture_path}}" width="80px"
+                                             height="80px">
+                                    @endif
                                 </div>
                                 <div class="col-md-7 float-left">
 

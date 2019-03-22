@@ -5,11 +5,14 @@ namespace App;
 use App\Traits\Friendable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Model implements Authenticatable
 {
     use \Illuminate\Auth\Authenticatable;
     use Friendable;
+    use Notifiable;
+
     protected $fillable = ['name', 'email', 'password', 'picture_path'];
 
     public function posts()

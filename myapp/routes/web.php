@@ -15,6 +15,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
@@ -40,17 +41,19 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
     Route::get('/profile', 'ProfileController@index')->name('profile');
 
-    Route::get('/findFriends', 'ProfileController@findFriends')->name('findFriend');
+    Route::get('/findFriends', 'FriendController@findFriends')->name('findFriend');
 
-    Route::get('/requests', 'ProfileController@requests')->name('requests');
+    Route::get('/requests', 'FriendController@requests')->name('requests');
 
-    Route::get('/accept/{id}/{name}', 'ProfileController@accept')->name('acceptFriend');
+    Route::get('/accept/{id}/{name}', 'FriendController@accept')->name('acceptFriend');
 
-    Route::get('/friends', 'ProfileController@friends')->name('friends');
+    Route::get('/friends', 'FriendController@friends')->name('friends');
 
-    Route::get('/requestRemove/{id}', 'ProfileController@requestRemove')->name('requestRemove');
+    Route::get('/requestRemove/{id}', 'FriendController@requestRemove')->name('requestRemove');
 
-    Route::get('/removeFriend/{id}', 'ProfileController@removeFriend')->name('removeFriend');
+    Route::get('/removeFriend/{id}', 'FriendController@removeFriend')->name('removeFriend');
+
+    Route::get('/addFriendNotifications/{id}', 'FriendController@addFriendNotifications')->name('addFriendNotifications');
 });
 
 
@@ -69,11 +72,8 @@ Route::get('/editProfile', 'ProfileController@editProfile')->name('editProfile')
 
 Route::post('updateProfile', 'ProfileController@updateProfile')->name('updateProfile');
 
-Route::get('/test', function () {
-    return Auth::user()->test();
-});
 
-Route::get('/addFriend/{id}', 'ProfileController@addFriend')->name('addFriend');
+Route::get('/addFriend/{id}', 'FriendController@addFriend')->name('addFriend');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

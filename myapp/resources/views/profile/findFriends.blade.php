@@ -23,18 +23,24 @@
                     </div>
 
                     <div class="card-body">
-                        @if (session('status'))
+                        @if (session('status') == false)
                             <div class="alert alert-success" role="alert">
                                 {{ session('status') }}
                             </div>
                         @endif
                         <div class="col-sm-12 col-md-12"></div>
                         @foreach($all_users as $ulist)
+                            @if(session('status'))
                             <div class="row " style="border-bottom:1px solid #ccc; margin-bottom:15px">
                                 <div class="col-md-2">
-                                    <img class="row rounded-circle" style="margin:auto"
-                                         src="../../public/images/{{$ulist->picture_path}}" width="80px"
-                                         height="80px">
+                                    @if (($ulist->picture_path == ''))
+                                        <img class="row rounded-circle" align="center" style="margin:auto"
+                                             src="{{asset('storage/male.png')}}" width="80px" height="80px">
+                                    @else
+                                        <img class="row rounded-circle" style="margin:auto"
+                                             src="../../public/images/{{$ulist->picture_path}}" width="80px"
+                                             height="80px">
+                                    @endif
                                 </div>
                                 <div class="col-md-7 float-left">
                                     <p style="margin: 0px"><a
@@ -52,15 +58,16 @@
                                 if($check == ''){
                                 ?>
 
-                                    <div class="figure-caption" align="center">
-                                        <p><a href="{{route('addFriend',[$ulist->id])}}" class="btn btn-info">Add
-                                                friend</a></p>
+                                <div class="figure-caption" align="center">
+                                    <p><a href="{{route('addFriend',[$ulist->id])}}" class="btn btn-info">Add
+                                            friend</a></p>
 
-                                    </div>
+                                </div>
                                 <?php } else {?>
                                 <p>Request Already Send</p>
                                 <?php } ?>
                             </div>
+                            @endif
                         @endforeach
                         <div class="col-sm-12 col-md-12">
                         </div>

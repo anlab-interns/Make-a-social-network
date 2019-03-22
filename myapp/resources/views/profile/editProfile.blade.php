@@ -31,9 +31,15 @@
                         <div class="col-sm-12 col-md-12">
                             <div class="img-thumbnail">
                                 <h3 align="center">{{ucwords(Auth::user()->name)}}</h3>
-                                <img class="row rounded-circle" align="center" style="margin:auto"
-                                     src="../../public/images/{{Auth::user()->picture_path}}" width="120px"
-                                     height="120px">
+                                @if ((Auth::user()->picture_path == ''))
+                                    <img class="row rounded-circle" align="center" style="margin:auto"
+                                         src="{{asset('storage/male.png')}}" width="120px" height="120px">
+                                @else
+                                    <img class="row rounded-circle" align="center" style="margin:auto"
+                                         src="../../public/images/{{Auth::user()->picture_path}}" width="120px"
+                                         {{--src="{{Auth::user()->picture_path}}" width="120px"--}}
+                                         height="120px">
+                                @endIf
                                 <div class="figure-caption">
                                     <p align="center">{{$data->cty}}-{{$data->country}}</p>
                                     <p align="center"><a href="{{route('changePhoto')}}" class="btn btn-primary"

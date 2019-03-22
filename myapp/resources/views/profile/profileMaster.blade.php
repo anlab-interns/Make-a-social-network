@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -16,7 +15,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -46,7 +45,8 @@
                         Find Friend
                     </a>
                     <li><a class="navbar-brand" href="{{route('requests') }}">
-                            My Request({{App\Http\Controllers\ProfileController::requestCount()}})
+                            My Request
+                            <span style="color: green; font-weight: bold;">({{App\Http\Controllers\FriendController::requestCount()}})</span>
                         </a></li>
                     {{--<li><a class="navbar-brand" href="{{route('friends') }}">--}}
                     {{--Friend--}}
@@ -67,18 +67,21 @@
                         @endif
                     @else
                         <li>
+
                             <a href="">
                                 @if ((Auth::user()->picture_path == ''))
                                     <img class="row rounded-circle" align="center" style="margin:auto"
-                                         src="../../../public/images/male.png" width="30px" height="30px">
+                                         src="{{asset('storage/male.png')}}" width="30px" height="30px">
                                 @else
                                     <img class="row rounded-circle" align="center" style="margin:auto"
-                                         src="../../public/images/{{Auth::user()->picture_path}}" width="50px"
-                                         height="50px">
+                                         src="../../public/images/{{Auth::user()->picture_path}}" width="30px"
+                                         {{--src="{{Auth::user()->picture_path}}" width="120px"--}}
+                                         height="30px">
                                 @endIf
                             </a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown" style="margin: auto">
+
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }} <span class="caret"></span>
