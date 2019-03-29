@@ -5,7 +5,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item active" aria-current="page"><a
-                            href="{{url('/profile')}}/{{Auth::user()->slug}}">Profile</a></li>
+                            href="{{url('/profile')}}/{{Auth::user()->name}}">Profile</a></li>
                 <li class="breadcrumb-item active" aria-current="page"><a
                             href="{{url('/editProfile')}}/{{Auth::user()->slug}}">Edit profile</a></li>
             </ol>

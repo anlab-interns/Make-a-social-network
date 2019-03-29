@@ -35,11 +35,13 @@ Route::group(['middleware' => 'auth'], function () {
         'as' => 'post.create'
     ]);
 
+    Route::post('/createPostWithImage', 'PostController@createPostWithImage')->name('createPostImage');
+
     Route::get('/delete-post/{post_id}', [
         'uses' => 'PostController@getDeletePost',
         'as' => 'post.delete'
     ]);
-    Route::get('/profile', 'ProfileController@index')->name('profile');
+    Route::get('/profile/{name}', 'ProfileController@index')->name('profile');
 
     Route::get('/findFriends', 'FriendController@findFriends')->name('findFriend');
 
@@ -77,3 +79,8 @@ Route::get('/addFriend/{id}', 'FriendController@addFriend')->name('addFriend');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/count', function () {
+//   $count = json_decode(DB::table('notifications')->pluck('data'));
+    echo 'hello';
+})->name('test');

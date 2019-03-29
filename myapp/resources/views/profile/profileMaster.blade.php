@@ -38,7 +38,7 @@
                     <a class="navbar-brand" href="{{ url('/dashboard') }}">
                         Posts
                     </a>
-                    <a class="navbar-brand" href="{{ url('/profile') }}">
+                    <a class="navbar-brand" href="{{url('/profile')}}/{{Auth::user()->name}}">
                         Profile
                     </a>
                     <a class="navbar-brand" href="{{route('findFriend') }}">

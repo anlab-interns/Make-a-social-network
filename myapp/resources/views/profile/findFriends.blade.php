@@ -1,11 +1,12 @@
 @extends('profile.profileMaster')
+
 @section('content')
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
                 <li class="breadcrumb-item active" aria-current="page"><a
-                            href="{{url('/profile')}}/{{Auth::user()->slug}}">Profile</a></li>
+                            href="{{url('/profile')}}/{{Auth::user()->name}}">Profile</a></li>
                 <li class="breadcrumb-item active" aria-current="page"><a
                             href="{{url('/editProfile')}}/{{Auth::user()->slug}}">Edit profile</a></li>
             </ol>
@@ -23,14 +24,23 @@
                     </div>
 
                     <div class="card-body">
-                        @if (session('status') == false)
+                        @if (session('status'))
                             <div class="alert alert-success" role="alert">
                                 {{ session('status') }}
                             </div>
                         @endif
                         <div class="col-sm-12 col-md-12"></div>
                         @foreach($all_users as $ulist)
-                            @if(session('status'))
+                            {{--@if(session('status'))--}}
+                            {{--@if($data == $ulist->id)--}}
+                            {{--@endif--}}
+                            <?php
+                            $test = DB::table('friends')->where('user_requested', '=', $ulist->id)
+                                ->where('requester', '=', Auth::user()->id)
+                                ->where('status', '=', 0)->first();
+                            if ($test != ''){
+                            //                                dd($test)
+                            ?>
                             <div class="row " style="border-bottom:1px solid #ccc; margin-bottom:15px">
                                 <div class="col-md-2">
                                     @if (($ulist->picture_path == ''))
@@ -44,7 +54,7 @@
                                 </div>
                                 <div class="col-md-7 float-left">
                                     <p style="margin: 0px"><a
-                                                href="{{route('profile')}}/{{$ulist->id}}">{{ucwords($ulist->name)}}</a>
+                                                href="{{url('/profile')}}/{{$ulist->name}}">{{ucwords($ulist->name)}}</a>
                                     <p style="margin: 0px">{{$ulist->cty}} - {{$ulist->country}}</p>
                                     <p style="margin: 0px">{{$ulist->about}}</p>
                                     </p>
@@ -67,7 +77,8 @@
                                 <p>Request Already Send</p>
                                 <?php } ?>
                             </div>
-                            @endif
+                            <?php } ?>
+                            {{--@endif--}}
                         @endforeach
                         <div class="col-sm-12 col-md-12">
                         </div>

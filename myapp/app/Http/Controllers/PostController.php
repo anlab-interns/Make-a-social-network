@@ -17,9 +17,10 @@ class PostController extends Controller
 
     public function postCreatePost(Request $request)
     {
+//        dd();
         // set validation rules
         $this->validate($request, [
-            'body'=>'required|max:1000'
+            'body' => 'required|max:1000',
         ]);
 
         // Tạo đối tượng post mới rồi gán body bằng data của request
@@ -28,6 +29,31 @@ class PostController extends Controller
     	$message = 'There was an error';
 
         // Kiểm tra xem post đã được lưu vào database hay chưa
+        if ($request->user()->posts()->save($post)) {
+            $message = 'Post successfully created!';
+        }
+        return redirect()->route('dashboard')->with(['message' => $message]);
+    }
+
+    public function createPostWithImage(Request $request)
+    {
+//        dd($request->user()->posts());
+        // set validation rules
+        $this->validate($request, [
+            'body' => 'required|max:1000',
+        ]);
+        $file = $request->file('pic_post');
+        $file_name = $file->getClientOriginalName();
+        $body = $request['body'];
+        $path = 'public/images';
+        $file->move($path, $file_name);
+        // Tạo đối tượng post mới rồi gán giá trị các trường bằng data của request
+
+        $post = new Post();
+        $post->body = $body;
+        $post->image = $file_name;
+        $message = 'There was an error';
+//        $post->save();
         if ($request->user()->posts()->save($post)) {
             $message = 'Post successfully created!';
         }
