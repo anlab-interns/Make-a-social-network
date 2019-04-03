@@ -1,9 +1,10 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+import {AxiosInstance as axios} from "axios";
+
 
 require('./bootstrap');
 
@@ -29,5 +30,22 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    data: {
+        posts: [],
+        postId: '',
+        bUrl: 'http://127.0.0.1:8000/'
+    },
+    method: {
+        likePost(id) {
+            axios.get(this.bUrl + '/likePost/' + id)
+                .then(response => {
+                    console.log(response); // show if success
+                    this.posts = response.data; //we are putting data into our posts array
+                })
+                .catch(function (error) {
+                    console.log(error); // run if we have error
+                });
+        },
+    }
 });

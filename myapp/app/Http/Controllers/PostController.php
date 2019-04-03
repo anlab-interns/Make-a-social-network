@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -12,7 +13,7 @@ class PostController extends Controller
     {
         // Lấy ra tất cả các post được sắp xếp theo thời gian khởi tạo và giảm dần
     	$posts= Post::orderBy('created_at','desc')->get();
-    	return view('dashboard', ['posts' => $posts]);
+        return view('dashboard')->with('posts', $posts);
     }
 
     public function postCreatePost(Request $request)
@@ -82,5 +83,18 @@ class PostController extends Controller
         $post->body=$request['body'];
         $post->update();
         return response()->json(['new_body'=>$post->body],200);
+    }
+
+    public function likePost($id)
+    {
+
+        $likePost = DB::table('likes')->insert([
+            'post_id' => $id,
+            'user_id' => Auth::user()->id,
+        ]);
+        if ($likePost) {
+            return post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
+        }
+
     }
 }

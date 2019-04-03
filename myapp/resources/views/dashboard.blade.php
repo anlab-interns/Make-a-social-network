@@ -7,7 +7,7 @@
 
 
 @section('content')
-    {{--@include('includes.message-block')--}}
+    @include('includes.message-block')
     <div class="container" style="justify-content: center; align-content: center;margin: auto">
         <section class="row new-post">
             <div class="card" style="margin: auto;border-width: 1px;border-color: gray;width: 60%">
@@ -16,7 +16,8 @@
                     <form action="{{ route('post.create') }}" method="post">
                         <div class="form-group" style="display: flex;flex-direction: row">
                             @if ((Auth::user()->picture_path == ''))
-                                <img class="row rounded-circle" align="center" style="margin-top: 0px;margin-left: 5px"
+                                <img class="row rounded-circle" align="center"
+                                     style="margin-top: 0px;margin-right: 5px;margin-left: 5px"
                                      src="{{asset('storage/male.png')}}" width="40px" height="40px">
                             @else
                                 <img class="row rounded-circle" align="center"
@@ -27,7 +28,7 @@
                             @endIf
                             <textarea class="form-control" name="body" id="new-post" rows="5"
                                       placeholder="Your post"
-                                      style="border-color: transparent; margin-top: 5px;margin-right: 5px;"
+                                      style="border-color: transparent;margin-right: 5px; margin-top: 5px;margin-right: 5px;"
 
                             ></textarea>
                         </div>
@@ -54,7 +55,7 @@
                             <div style="display:flex;flex-direction: row">
                                 @if ((Auth::user()->picture_path == ''))
                                     <img class="row rounded-circle" align="center"
-                                         style="margin-top: 0px;margin-left: 5px"
+                                         style="margin-top: 0px;margin-right: 5px;margin-left: 5px"
                                          src="{{asset('storage/male.png')}}" width="40px" height="40px">
                                 @else
                                     <img class="row rounded-circle" align="center"
@@ -64,7 +65,7 @@
                                          height="40px">
                                 @endIf
                                 <div>
-                                    <span style="color:mediumblue;font-weight: bold">{{Auth::user()->name}}</span>
+                                    <span style="color:mediumblue;font-weight: bold">{{$post->user['name']}}</span>
                                     <div class="info">
                                         Posted by {{ $post->user['name'] }}
                                         on {{ $post->created_at->format('m/d/Y') }}
@@ -73,29 +74,42 @@
                             </div>
 
                             <p style="margin-top: 5px">{{ $post->body }} </p>
-                            <img class="row" align="center"
-                                 style=";margin-left: 0px;margin-right: 5px;margin-top: 5px;width: 100%;height: 100%"
-                                 src="../../public/images/{{$post->image}}" width="120px"
-                                 height="120px">
-                            <hr>
+                            @if (($post->image != NULL))
+                                <img class="row" align="center"
+                                     style=";margin-left: 0px;margin-right: 5px;margin-top: 5px;width: 100%;height: 100%"
+                                     src="../../public/images/{{$post->image}}" width="120px"
+                                     height="120px">
+                                <hr>
+                            @endif
                             <div style="display: flex;flex-direction: row;margin-bottom: 10px">
                                 {{--<a href="" style="flex: 1;text-align: center;color: gray">Like</a>--}}
                                 <p style="flex: 1;text-align: center;" class="likeBtn">
-                                    <a href="" style="color: gray">
+                                    <?php
+                                    $checked = DB::table('likes')->where('post_id', $post->id)->where('user_id', Auth::user()->id)->first();
+                                    if ($checked != '') {
+                                    ?>
+                                    <a href="{{route('likePost',[$post->id])}}" style="color: blue">
                                         <i class="fa fa-thumbs-up"></i>
                                         Like
                                     </a>
+                                    <?php } else {?>
+                                    <a href="{{route('likePost',[$post->id])}}" style="color: gray">
+                                        <i class="fa fa-thumbs-up"></i>
+                                        Like
+                                    </a>
+                                    <?php } ?>
+                                    {{--                                    @endif--}}
                                 </p>
                                 <p style="flex: 1;text-align: center">
                                     <a href="" style="color: gray">
                                         <i class="fa fa-comment"></i>
                                         Comment
                                     </a>
-                                    {{--@if(Auth::user() == $post->user)--}}
-                                    {{--<a href="" class="edit" style="color: gray">Edit</a> |--}}
-                                    {{--<a href="{{ route('post.delete',['post_id' => $post->id]) }}"--}}
-                                    {{--style="color: gray">Delete</a>--}}
-                                    {{--@endif--}}
+                                    @if(Auth::user() == $post->user)
+                                        {{--                                    <a href="" class="edit" style="color: gray">Edit</a> |--}}
+                                        <a href="{{ route('post.delete',['post_id' => $post->id]) }}"
+                                           style="color: gray">Delete</a>
+                                    @endif
                                 </p>
                             </div>
                         </article>
@@ -120,7 +134,7 @@
                                 <div class="form-group" style="display: flex;flex-direction: row">
                                     @if ((Auth::user()->picture_path == ''))
                                         <img class="row rounded-circle" align="center"
-                                             style="margin-top: 0px;margin-left: 5px"
+                                             style="margin-top: 0px;margin-right: 5px;margin-left: 5px"
                                              src="{{asset('storage/male.png')}}" width="40px" height="40px">
                                     @else
                                         <img class="row rounded-circle" align="center"

@@ -13,6 +13,7 @@
 
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -41,7 +42,18 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'PostController@getDeletePost',
         'as' => 'post.delete'
     ]);
+
+    Route::get('/addFriend/{id}', 'FriendController@addFriend')->name('addFriend');
+
+    Route::get('/likePost/{id}', 'PostController@likePost')->name('likePost');
+
     Route::get('/profile/{name}', 'ProfileController@index')->name('profile');
+
+    Route::post('/updatePhoto', 'ProfileController@updatePhoto')->name('updatePhoto');
+
+    Route::get('/editProfile', 'ProfileController@editProfile')->name('editProfile');
+
+    Route::post('updateProfile', 'ProfileController@updateProfile')->name('updateProfile');
 
     Route::get('/findFriends', 'FriendController@findFriends')->name('findFriend');
 
@@ -68,19 +80,13 @@ Route::get('/changePhoto', function () {
     return view('profile.photo')->with('data', Auth::user()->profile);
 })->name('changePhoto');
 
-Route::post('/updatePhoto', 'ProfileController@updatePhoto')->name('updatePhoto');
-
-Route::get('/editProfile', 'ProfileController@editProfile')->name('editProfile');
-
-Route::post('updateProfile', 'ProfileController@updateProfile')->name('updateProfile');
 
 
-Route::get('/addFriend/{id}', 'FriendController@addFriend')->name('addFriend');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/count', function () {
-//   $count = json_decode(DB::table('notifications')->pluck('data'));
-    echo 'hello';
+    $data = json_decode(DB::table('notifications')->pluck('data'));
+    dd($data);
 })->name('test');
