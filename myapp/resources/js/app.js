@@ -3,8 +3,9 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-import {AxiosInstance as axios} from "axios";
 
+
+import axios from "axios";
 
 require('./bootstrap');
 
@@ -32,12 +33,58 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
     data: {
+        msg: 'hello',
+        body: '',
         posts: [],
         postId: '',
         bUrl: 'http://127.0.0.1:8000/'
     },
-    method: {
-        likePost(id) {
+    beforeMount: function () {
+        this.created();
+    },
+    created: function () {
+        axios.get(this.bUrl + '/dashboard/count')
+            .then(response => {
+                console.log(response); // show if success
+                this.posts = response.data; //we are putting data into our posts array
+            })
+            .catch(function (error) {
+                console.log(error); // run if we have error
+            });
+    },
+    methods: {
+        getRouteUrl(route, id) {
+            return ('http://127.0.0.1:8000/' + route + "/" + id);
+        },
+        getImgUrl(pic) {
+            return ('../../public/images/' + pic)
+        },
+        addPost: function () {
+            axios.post(this.bUrl + '/createpost', {
+                body: this.body
+            })
+                .then((response) => {
+                    this.body = "";
+                    console.log(response); // show if success
+                    if (response.status === 200) {
+                        app.posts = response.data;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error); // run if we have error
+                });
+        },
+        deletePost: function (id) {
+            console.log(id);
+            axios.get(this.bUrl + '/delete-post/' + id)
+                .then(response => {
+                    console.log(id); // show if success
+                })
+                .catch(function (error) {
+                    console.log(error); // run if we have error
+                });
+        },
+        likePost: function (id) {
             axios.get(this.bUrl + '/likePost/' + id)
                 .then(response => {
                     console.log(response); // show if success

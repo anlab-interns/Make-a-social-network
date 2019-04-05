@@ -112,7 +112,7 @@ class FriendController extends Controller
             ->where('requester', $id)
             ->update(['status' => 0]);
         if ($removeFriend) {
-            return back()->with('msg', 'Friend relationship has been deleted');;
+            return back()->with('msg', 'Friend relationship has been deleted');
         } else {
             echo 'fail';
         }

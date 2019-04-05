@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Like;
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,29 +10,37 @@ use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
-	 public function getDashboard()
+    public function getDashboard()
     {
         // Lấy ra tất cả các post được sắp xếp theo thời gian khởi tạo và giảm dần
-    	$posts= Post::orderBy('created_at','desc')->get();
-        return view('dashboard')->with('posts', $posts);
+        $posts = Post::with('user', 'likes')->orderBy('created_at', 'desc')->get();
+        return view('dashboard', compact('posts'));
     }
 
-    public function postCreatePost(Request $request)
+    public function addPost(Request $request)
     {
-//        dd();
         // set validation rules
         $this->validate($request, [
             'body' => 'required|max:1000',
         ]);
 
         // Tạo đối tượng post mới rồi gán body bằng data của request
-    	$post=new Post();
-    	$post->body=$request['body'];
-    	$message = 'There was an error';
+        // Bug: id tiếp tục tăng trong khi bảng trống
+        $post = new Post();
+        $post->body = $request['body'];
 
+//        $post->user_id = Auth::user()->id;
+//        $post->save();
+        $message = 'There was an error';
         // Kiểm tra xem post đã được lưu vào database hay chưa
         if ($request->user()->posts()->save($post)) {
-            $message = 'Post successfully created!';
+//            $post_json = DB::table('posts')
+//                ->leftJoin('profiles', 'profiles.user_id', '=', 'posts.user_id')
+//                ->leftJoin('users', 'posts.user_id','=', 'users.id')
+//                ->select('posts.id', 'users.name','posts.user_id', 'posts.created_at', 'body', 'image')
+//                ->get();
+//            return $post_json;
+            return Post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
         }
         return redirect()->route('dashboard')->with(['message' => $message]);
     }
@@ -54,46 +63,53 @@ class PostController extends Controller
         $post->body = $body;
         $post->image = $file_name;
         $message = 'There was an error';
-//        $post->save();
+        $post->save();
         if ($request->user()->posts()->save($post)) {
             $message = 'Post successfully created!';
         }
         return redirect()->route('dashboard')->with(['message' => $message]);
     }
 
-    public function getDeletePost($post_id)
+    public function deletePost($post_id)
     {
-        $post=Post::where('id',$post_id)->first();
-        if (Auth::user() != $post->user) {
-            return redirect()->back();
+        $uid = Auth::user()->id;
+        $post = DB::table('posts')
+            ->where('id', $post_id)
+            ->where('user_id', $uid)
+            ->delete();
+        if ($post) {
+            return back();
         }
-        $post->delete();
+
+        $like = Like::where('post_id', $post_id)->first();
+        if ($like) {
+            $like->delete();
+        }
         return redirect()->route('dashboard')->with(['message' => 'Post successfully deleted!']);
     }
 
     public function postEditPost(Request $request)
     {
         $this->validate($request, [
-            'body'=>'required'
+            'body' => 'required'
         ]);
-        $post= Post::find($request['postId']);
+        $post = Post::find($request['postId']);
         if (Auth::user() != $post->user) {
             return redirect()->back();
         }
-        $post->body=$request['body'];
+        $post->body = $request['body'];
         $post->update();
-        return response()->json(['new_body'=>$post->body],200);
+        return response()->json(['new_body' => $post->body], 200);
     }
 
     public function likePost($id)
     {
-
         $likePost = DB::table('likes')->insert([
             'post_id' => $id,
             'user_id' => Auth::user()->id,
         ]);
         if ($likePost) {
-            return post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
+            return Post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
         }
 
     }

@@ -13,7 +13,6 @@
 
 
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -32,15 +31,15 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
 
     Route::post('/createpost', [
-        'uses' => 'PostController@postCreatePost',
-        'as' => 'post.create'
+        'uses' => 'PostController@addPost',
+        'as' => 'addPost'
     ]);
 
     Route::post('/createPostWithImage', 'PostController@createPostWithImage')->name('createPostImage');
 
     Route::get('/delete-post/{post_id}', [
-        'uses' => 'PostController@getDeletePost',
-        'as' => 'post.delete'
+        'uses' => 'PostController@deletePost',
+        'as' => 'deletePost'
     ]);
 
     Route::get('/addFriend/{id}', 'FriendController@addFriend')->name('addFriend');
@@ -81,12 +80,15 @@ Route::get('/changePhoto', function () {
 })->name('changePhoto');
 
 
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/count', function () {
-    $data = json_decode(DB::table('notifications')->pluck('data'));
-    dd($data);
-})->name('test');
+Route::get('/dashboard/count', function () {
+//    $data = json_decode(DB::table('notifications')->pluck('data'));
+//    dd($data);
+    return App\Post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
+});
+Route::get('/try', function () {
+    return App\Post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
+});

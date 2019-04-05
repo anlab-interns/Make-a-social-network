@@ -48964,14 +48964,22 @@ module.exports = function(module) {
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+    /*! no exports provided */
+    /***/ (function (module, __webpack_exports__, __webpack_require__) {
 
+        "use strict";
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony import */
+        var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+        /* harmony import */
+        var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+
+
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
@@ -48985,7 +48993,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue").default);
+        Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -48993,7 +49001,71 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
  */
 
 var app = new Vue({
-  el: '#app'
+    el: '#app',
+    data: {
+        msg: 'hello',
+        body: '',
+        posts: [],
+        postId: '',
+        bUrl: 'http://127.0.0.1:8000/'
+    },
+    beforeMount: function beforeMount() {
+        this.created();
+    },
+    created: function created() {
+        var _this = this;
+
+        axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.bUrl + '/dashboard/count').then(function (response) {
+            console.log(response); // show if success
+
+            _this.posts = response.data; //we are putting data into our posts array
+        })["catch"](function (error) {
+            console.log(error); // run if we have error
+        });
+    },
+    methods: {
+        getRouteUrl: function getRouteUrl(route, id) {
+            return 'http://127.0.0.1:8000/' + route + "/" + id;
+        },
+        getImgUrl: function getImgUrl(pic) {
+            return '../../public/images/' + pic;
+        },
+        addPost: function addPost() {
+            var _this2 = this;
+
+            axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.bUrl + '/createpost', {
+                body: this.body
+            }).then(function (response) {
+                _this2.body = "";
+                console.log(response); // show if success
+
+                if (response.status === 200) {
+                    app.posts = response.data;
+                }
+            })["catch"](function (error) {
+                console.log(error); // run if we have error
+            });
+        },
+        deletePost: function deletePost(id) {
+            console.log(id);
+            axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.bUrl + '/delete-post/' + id).then(function (response) {
+                console.log(id); // show if success
+            })["catch"](function (error) {
+                console.log(error); // run if we have error
+            });
+        },
+        likePost: function likePost(id) {
+            var _this3 = this;
+
+            axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.bUrl + '/likePost/' + id).then(function (response) {
+                console.log(response); // show if success
+
+                _this3.posts = response.data; //we are putting data into our posts array
+            })["catch"](function (error) {
+                console.log(error); // run if we have error
+            });
+        }
+    }
 });
 
 /***/ }),
@@ -49013,7 +49085,7 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
  */
 
 try {
-  window.Popper = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js").default;
+    window.Popper = __webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js")["default"];
   window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 
   __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
