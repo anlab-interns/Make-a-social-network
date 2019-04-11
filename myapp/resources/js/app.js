@@ -118,8 +118,14 @@ const app = new Vue({
                 });
         },
         toggle: function (item) {
-            app.showComment = item;
-            app.index = !app.index;
+
+            if (app.showComment !== item) {
+                app.showComment = item;
+                app.index = true;
+            } else {
+                app.index = !app.index;
+            }
+
         },
         populate: function () {
             // console.log(app.posts);

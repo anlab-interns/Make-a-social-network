@@ -49079,8 +49079,12 @@ var app = new Vue({
             });
         },
         toggle: function toggle(item) {
-            app.showComment = item;
-            app.index = !app.index;
+            if (app.showComment !== item) {
+                app.showComment = item;
+                app.index = true;
+            } else {
+                app.index = !app.index;
+            }
         },
         populate: function populate() {// console.log(app.posts);
             // for(let i = 0; i<4; i++) {
