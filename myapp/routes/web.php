@@ -46,6 +46,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/likePost/{id}', 'PostController@likePost')->name('likePost');
 
+    Route::get('/showComments/{id}', 'PostController@showComments')->name('showComments');
+
+    Route::post('/addComment', 'PostController@addComment')->name('addComment');
+
     Route::get('/profile/{name}', 'ProfileController@index')->name('profile');
 
     Route::post('/updatePhoto', 'ProfileController@updatePhoto')->name('updatePhoto');
@@ -87,8 +91,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/dashboard/count', function () {
 //    $data = json_decode(DB::table('notifications')->pluck('data'));
 //    dd($data);
-    return App\Post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
+    return App\Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
 });
 Route::get('/try', function () {
-    return App\Post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
+    return App\Post::with('user', 'likes', 'comments')->pluck('id');
 });

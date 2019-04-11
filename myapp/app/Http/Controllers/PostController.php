@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Like;
 use App\Post;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,7 @@ class PostController extends Controller
     public function getDashboard()
     {
         // Lấy ra tất cả các post được sắp xếp theo thời gian khởi tạo và giảm dần
-        $posts = Post::with('user', 'likes')->orderBy('created_at', 'desc')->get();
+        $posts = Post::with('user', 'likes', 'comments')->orderBy('created_at', 'desc')->get();
         return view('dashboard', compact('posts'));
     }
 
@@ -25,22 +26,13 @@ class PostController extends Controller
         ]);
 
         // Tạo đối tượng post mới rồi gán body bằng data của request
-        // Bug: id tiếp tục tăng trong khi bảng trống
+        // Bug: id tiếp tục tăng trong khi table trống
         $post = new Post();
         $post->body = $request['body'];
-
-//        $post->user_id = Auth::user()->id;
-//        $post->save();
         $message = 'There was an error';
         // Kiểm tra xem post đã được lưu vào database hay chưa
         if ($request->user()->posts()->save($post)) {
-//            $post_json = DB::table('posts')
-//                ->leftJoin('profiles', 'profiles.user_id', '=', 'posts.user_id')
-//                ->leftJoin('users', 'posts.user_id','=', 'users.id')
-//                ->select('posts.id', 'users.name','posts.user_id', 'posts.created_at', 'body', 'image')
-//                ->get();
-//            return $post_json;
-            return Post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
+            return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
         }
         return redirect()->route('dashboard')->with(['message' => $message]);
     }
@@ -78,7 +70,7 @@ class PostController extends Controller
             ->where('user_id', $uid)
             ->delete();
         if ($post) {
-            return back();
+            return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
         }
 
         $like = Like::where('post_id', $post_id)->first();
@@ -109,8 +101,20 @@ class PostController extends Controller
             'user_id' => Auth::user()->id,
         ]);
         if ($likePost) {
-            return Post::with('user', 'likes')->orderBy('created_at', 'DESC')->get();
+            return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
         }
 
+    }
+
+    public function addComment(Request $request)
+    {
+        $comment = $request->comment;
+        $id = $request->id;
+        $createComment = DB::table('comments')
+            ->insert(['comment' => $comment, 'user_id' => Auth::user()->id, 'post_id' => $id,
+                'created_at' => Carbon::now()->toDateTimeString()]);
+        if ($createComment) {
+            return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
+        }
     }
 }

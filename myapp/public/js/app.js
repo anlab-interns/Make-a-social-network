@@ -49007,23 +49007,24 @@ var app = new Vue({
         body: '',
         posts: [],
         postId: '',
-        bUrl: 'http://127.0.0.1:8000/'
+        bUrl: 'http://127.0.0.1:8000/',
+        commentData: {},
+        showComment: null,
+        index: false
     },
-    beforeMount: function beforeMount() {
+    mounted: function mounted() {
         this.created();
     },
-    created: function created() {
-        var _this = this;
-
-        axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.bUrl + '/dashboard/count').then(function (response) {
-            console.log(response); // show if success
-
-            _this.posts = response.data; //we are putting data into our posts array
-        })["catch"](function (error) {
-            console.log(error); // run if we have error
-        });
-    },
     methods: {
+        created: function created() {
+            axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.bUrl + '/dashboard/count').then(function (response) {
+                // console.log(response.data); // show if success
+                app.posts = response.data; //we are putting data into our posts array
+                // app.posts.push({active: false })
+            })["catch"](function (error) {
+                console.log(error); // run if we have error
+            });
+        },
         getRouteUrl: function getRouteUrl(route, id) {
             return 'http://127.0.0.1:8000/' + route + "/" + id;
         },
@@ -49031,12 +49032,10 @@ var app = new Vue({
             return '../../public/images/' + pic;
         },
         addPost: function addPost() {
-            var _this2 = this;
-
             axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.bUrl + '/createpost', {
                 body: this.body
             }).then(function (response) {
-                _this2.body = "";
+                app.body = "";
                 console.log(response); // show if success
 
                 if (response.status === 200) {
@@ -49055,18 +49054,42 @@ var app = new Vue({
             });
         },
         likePost: function likePost(id) {
-            var _this3 = this;
-
             axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.bUrl + '/likePost/' + id).then(function (response) {
                 console.log(response); // show if success
 
-                _this3.posts = response.data; //we are putting data into our posts array
+                app.posts = response.data; //we are putting data into our posts array
             })["catch"](function (error) {
                 console.log(error); // run if we have error
             });
+        },
+        addComment: function addComment(post, key) {
+            // alert(this.commentData);
+            axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.bUrl + '/addComment', {
+                comment: this.commentData[key],
+                id: post.id
+            }).then(function (response) {
+                app.commentData = "";
+                console.log(response); // show if success
+
+                if (response.status === 200) {
+                    app.posts = response.data;
+                }
+            })["catch"](function (error) {
+                console.log(error); // run if we have error
+            });
+        },
+        toggle: function toggle(item) {
+            app.showComment = item;
+            app.index = !app.index;
+        },
+        populate: function populate() {// console.log(app.posts);
+            // for(let i = 0; i<4; i++) {
+            // this.posts[1].push.apply({active: false });
+            // }
         }
-    }
-});
+    },
+    compute: {}
+}); // app.populate();
 
 /***/ }),
 

@@ -37,22 +37,27 @@ const app = new Vue({
         body: '',
         posts: [],
         postId: '',
-        bUrl: 'http://127.0.0.1:8000/'
+        bUrl: 'http://127.0.0.1:8000/',
+        commentData: {},
+        showComment: null,
+        index: false
     },
-    beforeMount: function () {
+    mounted: function () {
         this.created();
     },
-    created: function () {
-        axios.get(this.bUrl + '/dashboard/count')
-            .then(response => {
-                console.log(response); // show if success
-                this.posts = response.data; //we are putting data into our posts array
-            })
-            .catch(function (error) {
-                console.log(error); // run if we have error
-            });
-    },
+
     methods: {
+        created: function () {
+            axios.get(this.bUrl + '/dashboard/count')
+                .then(response => {
+                    // console.log(response.data); // show if success
+                    app.posts = response.data; //we are putting data into our posts array
+                    // app.posts.push({active: false })
+                })
+                .catch(function (error) {
+                    console.log(error); // run if we have error
+                });
+        },
         getRouteUrl(route, id) {
             return ('http://127.0.0.1:8000/' + route + "/" + id);
         },
@@ -61,10 +66,11 @@ const app = new Vue({
         },
         addPost: function () {
             axios.post(this.bUrl + '/createpost', {
-                body: this.body
+                body: this.body,
             })
                 .then((response) => {
-                    this.body = "";
+                    app.body = "";
+
                     console.log(response); // show if success
                     if (response.status === 200) {
                         app.posts = response.data;
@@ -88,11 +94,40 @@ const app = new Vue({
             axios.get(this.bUrl + '/likePost/' + id)
                 .then(response => {
                     console.log(response); // show if success
-                    this.posts = response.data; //we are putting data into our posts array
+                    app.posts = response.data; //we are putting data into our posts array
                 })
                 .catch(function (error) {
                     console.log(error); // run if we have error
                 });
         },
-    }
+        addComment: function (post, key) {
+            // alert(this.commentData);
+            axios.post(this.bUrl + '/addComment', {
+                comment: this.commentData[key],
+                id: post.id
+            })
+                .then((response) => {
+                    app.commentData = "";
+                    console.log(response); // show if success
+                    if (response.status === 200) {
+                        app.posts = response.data;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error); // run if we have error
+                });
+        },
+        toggle: function (item) {
+            app.showComment = item;
+            app.index = !app.index;
+        },
+        populate: function () {
+            // console.log(app.posts);
+            // for(let i = 0; i<4; i++) {
+            // this.posts[1].push.apply({active: false });
+            // }
+        }
+    },
+    compute: {}
 });
+// app.populate();

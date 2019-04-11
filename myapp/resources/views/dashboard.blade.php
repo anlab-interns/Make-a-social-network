@@ -1,6 +1,11 @@
 {{--Kế thừa giao diện file app.blade.php--}}
-@extends('layouts.app')
 
+@extends('layouts.app')
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
 @section('title')
     My Dashboard
 @endsection
@@ -29,7 +34,7 @@
                             @endIf
                             <textarea class="form-control" v-model="body" name="body" id="new-post" rows="5"
                                       placeholder="Your post"
-                                      style="border-color: transparent;margin-right: 5px; margin-top: 5px;margin-right: 5px;"
+                                      style="border-color: transparent; margin-top: 5px;margin-right: 5px;"
 
                             ></textarea>
                         </div>
@@ -49,7 +54,7 @@
         <section class="row posts " style="margin-top: 15px">
             <div class="col-md-offset-3" style="margin-left: auto;margin-right: auto;width: 60%">
                 <div class="card"
-                     v-for="post in posts"
+                     v-for="post,key in posts"
                      style="margin-top: 10px;margin-right:auto;margin-left: auto;border-width: 1px;border-color: gray;width: 100%">
                     <article
                             class="post"
@@ -81,7 +86,7 @@
                              :src="getImgUrl(post.image)" width="120px"
                              height="120px">
                         <hr>
-                        <div style="display: flex;flex-direction: row;margin-bottom: 10px;">
+                        <div style="display: flex;flex-direction: row;margin-bottom: 10px;border-bottom:1px solid #ddd">
                             <a href="#" v-if="post.likes.length!=0" style="flex: 1;text-align: center;color: gray">
                                 <i class="fa fa-thumbs-up" style="color: blue;"></i>
                                 Thích
@@ -93,17 +98,34 @@
                                 Thích
                             </a>
 
-                            <p style="flex: 1;text-align: center" style="flex: 1">
-                                <a href="" style="color: gray">
+                            <p style="flex: 1;text-align: center;">
+                                <a href="#" @click="toggle(key)" style="color: gray">
                                     <i class="fa fa-comment"></i>
-                                    Comment
+                                    Comment <b style="color: green">@{{post.comments.length}}</b>
                                 </a>
-                                {{--                                <a href="" class="edit" style="color: gray">Edit</a> |--}}
+                                <a href="#" class="edit" style="color: gray" @click="populate">Edit</a> |
                                 <a v-if="post.user_id=={{Auth::user()->id}}"
                                    href="#"
                                    @click="deletePost(post.id)"
                                    style="color: gray">Delete</a>
                             </p>
+                        </div>
+                        <div v-if="showComment==key && index==true"
+                             style="background-color:#F6F7F9;width:99%;margin:0 auto">
+                            <div style="padding: 10px;margin-bottom: 10px">
+                                <textarea placeholder="Your post"
+                                          v-model="commentData[key]"
+                                          style="width: 99%; margin-top: 5px;margin-right: 5px;"></textarea>
+                                <button class="btn-success" @click="addComment(post,key)" style="margin-top: 10px">
+                                    Comment
+                                </button>
+                            </div>
+                            <ul v-for="comment in post.comments">
+                                <li
+                                        style="padding:10px; border-bottom:1px solid #ddd"
+                                >@{{ comment.comment }}
+                                </li>
+                            </ul>
                         </div>
                     </article>
                 </div>

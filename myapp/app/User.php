@@ -29,4 +29,14 @@ class User extends Model implements Authenticatable
     {
         return $this->hasOne('App\Profile');
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }
