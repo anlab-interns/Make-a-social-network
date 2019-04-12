@@ -69,7 +69,6 @@
                                 <img class="row rounded-circle" align="center"
                                      style=";margin-left: 0px;margin-right: 5px;margin-top: 5px;"
                                      src="../../public/images/{{Auth::user()->picture_path}}" width="40px"
-                                     {{--src="{{Auth::user()->picture_path}}" width="120px"--}}
                                      height="40px">
                             @endIf
                             <div>
@@ -120,12 +119,31 @@
                                     Comment
                                 </button>
                             </div>
-                            <ul v-for="comment in post.comments">
-                                <li
-                                        style="padding:10px; border-bottom:1px solid #ddd"
-                                >@{{ comment.comment }}
-                                </li>
-                            </ul>
+                            <div v-for="comment in post.comments"
+                                 style="list-style: none;margin-left: 20px;margin-bottom: 10px">
+                                <div style="display: flex;flex-direction: row">
+                                    @if ((Auth::user()->picture_path == ''))
+                                        <img class="row rounded-circle" align="center"
+                                             style="margin-top: 5px;margin-right: 5px"
+                                             src="{{asset('storage/male.png')}}" width="40px" height="40px">
+                                    @else
+                                        <img class="row rounded-circle" align="center"
+                                             style="margin-right: 5px;margin-top: 5px;"
+                                             src="../../public/images/{{Auth::user()->picture_path}}" width="40px"
+                                             {{--src="{{Auth::user()->picture_path}}" width="120px"--}}
+                                             height="40px">
+                                    @endIf
+                                    <p style="font-weight: bold;color: blue;margin-left: 5px;margin-top: 11px;margin-bottom:11px;text-align: center">
+                                        @{{
+                                        post.user['name']
+                                        }}</p>
+                                    <div
+                                            style="padding:10px"
+                                    >@{{ comment.comment }}
+                                    </div>
+                                </div>
+                                <p style="margin:auto;width: 82%;color: #8ab2f2">@{{ post.created_at }}</p>
+                            </div>
                         </div>
                     </article>
                 </div>
