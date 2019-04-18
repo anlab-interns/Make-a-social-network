@@ -71,6 +71,25 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/removeFriend/{id}', 'FriendController@removeFriend')->name('removeFriend');
 
     Route::get('/addFriendNotifications/{id}', 'FriendController@addFriendNotifications')->name('addFriendNotifications');
+
+    Route::get('/chat', function () {
+        return view('chat');
+    });
+
+    Route::get('/getUserLogin', function () {
+        return Auth::user();
+    });
+
+    Route::get('/messages', function () {
+        return App\Message::with('user')->get();
+    });
+
+    Route::post('/messages', function () {
+        $user = Auth::user();
+        $message = $user->messages()->create(['message' => request()->get('message')]);
+        broadcast(new App\Events\MessagePosted($message, $user))->toOthers();
+        return ['status' => 'OK'];
+    });
 });
 
 
@@ -89,10 +108,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/dashboard/count', function () {
-//    $data = json_decode(DB::table('notifications')->pluck('data'));
-//    dd($data);
     return App\Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
 });
+
+
 Route::get('/try', function () {
     return App\Post::with('user', 'likes', 'comments')->pluck('id');
 });

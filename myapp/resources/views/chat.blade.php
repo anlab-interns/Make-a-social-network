@@ -25,11 +25,12 @@
             overflow: hidden;
         }
     </style>
+    <script defer src="{{asset('js/app.js')}}"></script>
 </head>
 <body>
 <div id="app">
     <chat-layout></chat-layout>
 </div>
-<script src="../../resources/js/app.js"></script>
+
 </body>
 </html>

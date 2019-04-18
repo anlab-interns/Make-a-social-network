@@ -35,6 +35,11 @@ class User extends Model implements Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
     public function likes()
     {
         return $this->hasMany(Like::class);

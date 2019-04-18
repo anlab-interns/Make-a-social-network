@@ -3,15 +3,17 @@
         <div class="chat">
             <div class="chat-title">
                 <h1>Chatroom</h1>
+
             </div>
             <div class="messages">
                 <div class="messages-content">
-                    <ChatItem v-for="n in 30" :key="n"></ChatItem>
+                    <ChatItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatItem>
                 </div>
             </div>
             <div class="message-box">
-                <textarea type="text" class="message-input" placeholder="Type message..."></textarea>
-                <button type="submit" class="message-submit">Send</button>
+                <input type="text" v-model="message" @keyup.enter="sendMessage" class="message-input"
+                       placeholder="Type message..."/>
+                <button type="button" class="message-submit" v-on:click="sendMessage">Send</button>
             </div>
         </div>
         <div class="bg"></div>
@@ -20,12 +22,72 @@
 
 <script>
     import ChatItem from './ChatItem.vue'
+    import axios from "axios";
 
     export default {
         components: {
             ChatItem
+        },
+        data() {
+            return {
+                message: '',
+                list_messages: [],
+                csrfToken: ''
+            }
+        },
+        created() {
+            this.loadMessage();
+            Echo.channel('chatroom')
+                .listen('MessagePosted', (data) => {
+                    let message = data.message;
+                    message.user = data.user;
+                    this.list_messages.push(message);
+                    this.scrollToBottom();
+                })
+        },
+        mounted() {
+            this.csrfToken = document.head.querySelector('meta[name="csrf-token"]').content
+        },
+        methods: {
+            loadMessage() {
+                axios.get('/messages')
+                    .then(response => {
+                        this.list_messages = response.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            scrollToBottom() {
+                const container = document.querySelector('.messages');
+                if (container) {
+                    $(container).animate(
+                        {scrollTop: container.scrollHeight},
+                        {duration: 'medium', easing: 'swing'}
+                    )
+                }
+            },
+            sendMessage() {
+                axios.post('/messages', {
+                    message: this.message
+                })
+                    .then(response => {
+                        console.log(response);
+                        this.list_messages.push({
+                            message: this.message,
+                            created_at: new Date().toJSON().replace(/[TZ]/gi, ' '),
+                            user: this.$root.currentUserLogin
+                        });
+                        this.message = '';
+                        this.scrollToBottom();
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
         }
     }
+
 </script>
 
 <style lang="scss" scoped>

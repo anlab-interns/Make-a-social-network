@@ -6,6 +6,7 @@
 
 
 import axios from "axios";
+// import * as Vue from "vue";
 
 require('./bootstrap');
 
@@ -22,7 +23,9 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('chat-layout', require('./components/ChatLayout.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -40,14 +43,18 @@ const app = new Vue({
         bUrl: 'http://127.0.0.1:8000/',
         commentData: {},
         showComment: null,
-        index: false
+        index: false,
+        currentUserLogin: {}
     },
     mounted: function () {
-        this.created();
+        this.create();
+    },
+    created() {
+        this.getCurrentUserLogin()
     },
 
     methods: {
-        created: function () {
+        create: function () {
             axios.get(this.bUrl + '/dashboard/count')
                 .then(response => {
                     // console.log(response.data); // show if success
@@ -63,6 +70,15 @@ const app = new Vue({
         },
         getImgUrl(pic) {
             return ('../../public/images/' + pic)
+        },
+        getCurrentUserLogin() {
+            axios.get('/getUserLogin')
+                .then(response => {
+                    this.currentUserLogin = response.data
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         },
         addPost: function () {
             axios.post(this.bUrl + '/createpost', {
@@ -127,13 +143,5 @@ const app = new Vue({
             }
 
         },
-        populate: function () {
-            // console.log(app.posts);
-            // for(let i = 0; i<4; i++) {
-            // this.posts[1].push.apply({active: false });
-            // }
-        }
     },
-    compute: {}
 });
-// app.populate();
