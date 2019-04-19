@@ -3,7 +3,6 @@
         <div class="chat">
             <div class="chat-title">
                 <h1>Chatroom</h1>
-
             </div>
             <div class="messages">
                 <div class="messages-content">
@@ -13,7 +12,7 @@
             <div class="message-box">
                 <input type="text" v-model="message" @keyup.enter="sendMessage" class="message-input"
                        placeholder="Type message..."/>
-                <button type="button" class="message-submit" v-on:click="sendMessage">Send</button>
+                <button type="button" class="message-submit" @click="sendMessage">Send</button>
             </div>
         </div>
         <div class="bg"></div>
@@ -22,7 +21,6 @@
 
 <script>
     import ChatItem from './ChatItem.vue'
-    import axios from "axios";
 
     export default {
         components: {
@@ -36,13 +34,13 @@
             }
         },
         created() {
-            this.loadMessage();
+            this.loadMessage()
             Echo.channel('chatroom')
                 .listen('MessagePosted', (data) => {
-                    let message = data.message;
-                    message.user = data.user;
-                    this.list_messages.push(message);
-                    this.scrollToBottom();
+                    let message = data.message
+                    message.user = data.user
+                    this.list_messages.push(message)
+                    this.scrollToBottom()
                 })
         },
         mounted() {
@@ -59,35 +57,34 @@
                     })
             },
             scrollToBottom() {
-                const container = document.querySelector('.messages');
+                const container = document.querySelector('.messages')
                 if (container) {
                     $(container).animate(
                         {scrollTop: container.scrollHeight},
                         {duration: 'medium', easing: 'swing'}
                     )
                 }
+
             },
             sendMessage() {
                 axios.post('/messages', {
                     message: this.message
                 })
                     .then(response => {
-                        console.log(response);
                         this.list_messages.push({
                             message: this.message,
-                            created_at: new Date().toJSON().replace(/[TZ]/gi, ' '),
+                            created_at: new Date().toJSON().replace(/T|Z/gi, ' '),
                             user: this.$root.currentUserLogin
-                        });
-                        this.message = '';
-                        this.scrollToBottom();
+                        })
+                        this.message = ''
+                        this.scrollToBottom()
                     })
                     .catch(error => {
                         console.log(error)
                     })
-            },
+            }
         }
     }
-
 </script>
 
 <style lang="scss" scoped>
@@ -100,6 +97,7 @@
     /*--------------------
     Body
     --------------------*/
+
     .bg {
         position: absolute;
         width: 100%;
@@ -111,6 +109,7 @@
         filter: blur(80px);
         transform: scale(1.2);
     }
+
 
     /*--------------------
     Chat
@@ -132,6 +131,7 @@
         justify-content: space-between;
         flex-direction: column;
     }
+
 
     /*--------------------
     Chat Title
@@ -202,7 +202,7 @@
             width: 265px;
         }
 
-        textarea:focus::-webkit-input-placeholder {
+        textarea:focus:-webkit-placeholder {
             color: transparent;
         }
 
@@ -226,5 +226,12 @@
                 background: #1D7745;
             }
         }
+    }
+
+    .btn-logout {
+        position: absolute;
+        top: 20px;
+        right: 50px;
+        z-index: 3;
     }
 </style>

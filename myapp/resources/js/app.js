@@ -5,7 +5,7 @@
  */
 
 
-import axios from "axios";
+// import axios from "axios";
 // import * as Vue from "vue";
 
 require('./bootstrap');
@@ -46,20 +46,18 @@ const app = new Vue({
         index: false,
         currentUserLogin: {}
     },
-    mounted: function () {
-        this.create();
-    },
     created() {
         this.getCurrentUserLogin()
     },
-
+    mounted: function () {
+        this.create();
+    },
     methods: {
         create: function () {
             axios.get(this.bUrl + '/dashboard/count')
                 .then(response => {
                     // console.log(response.data); // show if success
                     app.posts = response.data; //we are putting data into our posts array
-                    // app.posts.push({active: false })
                 })
                 .catch(function (error) {
                     console.log(error); // run if we have error
@@ -77,7 +75,7 @@ const app = new Vue({
                     this.currentUserLogin = response.data
                 })
                 .catch(error => {
-                    console.log(error);
+
                 })
         },
         addPost: function () {

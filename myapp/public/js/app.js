@@ -1889,10 +1889,6 @@ __webpack_require__.r(__webpack_exports__);
         __webpack_require__.r(__webpack_exports__);
         /* harmony import */
         var _ChatItem_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatItem.vue */ "./resources/js/components/ChatItem.vue");
-        /* harmony import */
-        var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-        /* harmony import */
-        var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 //
 //
 //
@@ -1914,7 +1910,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
 
         /* harmony default export */
         __webpack_exports__["default"] = ({
@@ -1948,7 +1943,7 @@ __webpack_require__.r(__webpack_exports__);
                 loadMessage: function loadMessage() {
                     var _this2 = this;
 
-                    axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/messages').then(function (response) {
+                    axios.get('/messages').then(function (response) {
                         _this2.list_messages = response.data;
                     })["catch"](function (error) {
                         console.log(error);
@@ -1969,14 +1964,12 @@ __webpack_require__.r(__webpack_exports__);
                 sendMessage: function sendMessage() {
                     var _this3 = this;
 
-                    axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/messages', {
+                    axios.post('/messages', {
                         message: this.message
                     }).then(function (response) {
-                        console.log(response);
-
                         _this3.list_messages.push({
                             message: _this3.message,
-                            created_at: new Date().toJSON().replace(/[TZ]/gi, ' '),
+                            created_at: new Date().toJSON().replace(/T|Z/gi, ' '),
                             user: _this3.$root.currentUserLogin
                         });
 
@@ -8969,7 +8962,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // module
-        exports.push([module.i, ".messages[data-v-927db766] {\n  height: 80%;\n  overflow-y: scroll;\n  padding: 0 20px;\n}\n\n/*--------------------\nBody\n--------------------*/\n.bg[data-v-927db766] {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0;\n  z-index: 1;\n  background: url(\"https://images.unsplash.com/photo-1451186859696-371d9477be93?crop=entropy&fit=crop&fm=jpg&h=975&ixjsv=2.1.0&ixlib=rb-0.3.5&q=80&w=1925\") no-repeat 0 0;\n  -webkit-filter: blur(80px);\n          filter: blur(80px);\n  -webkit-transform: scale(1.2);\n          transform: scale(1.2);\n}\n\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-927db766] {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  width: 500px;\n  height: 80vh;\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);\n  background: rgba(0, 0, 0, 0.5);\n  border-radius: 20px;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.chat-title[data-v-927db766] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: rgba(0, 0, 0, 0.2);\n  color: #fff;\n  text-transform: uppercase;\n  text-align: left;\n  padding: 10px 10px 10px 50px;\n}\n.chat-title h1[data-v-927db766], .chat-title h2[data-v-927db766] {\n  font-weight: normal;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-927db766] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-927db766] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-927db766] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-927db766] {\n  flex: 0 1 40px;\n  width: 100%;\n  background: rgba(0, 0, 0, 0.3);\n  padding: 10px;\n  position: relative;\n}\n.message-box .message-input[data-v-927db766] {\n  background: none;\n  border: none;\n  outline: none !important;\n  resize: none;\n  color: rgba(255, 255, 255, 0.7);\n  font-size: 11px;\n  height: 17px;\n  margin: 0;\n  padding-right: 20px;\n  width: 265px;\n}\n.message-box textarea[data-v-927db766]:focus::-webkit-input-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-927db766] {\n  position: absolute;\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  color: #fff;\n  border: none;\n  background: #248A52;\n  font-size: 10px;\n  text-transform: uppercase;\n  line-height: 1;\n  padding: 6px 10px;\n  border-radius: 10px;\n  outline: none !important;\n  transition: background 0.2s ease;\n}\n.message-box .message-submit[data-v-927db766]:hover {\n  background: #1D7745;\n}", ""]);
+        exports.push([module.i, ".messages[data-v-927db766] {\n  height: 80%;\n  overflow-y: scroll;\n  padding: 0 20px;\n}\n\n/*--------------------\nBody\n--------------------*/\n.bg[data-v-927db766] {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0;\n  z-index: 1;\n  background: url(\"https://images.unsplash.com/photo-1451186859696-371d9477be93?crop=entropy&fit=crop&fm=jpg&h=975&ixjsv=2.1.0&ixlib=rb-0.3.5&q=80&w=1925\") no-repeat 0 0;\n  -webkit-filter: blur(80px);\n          filter: blur(80px);\n  -webkit-transform: scale(1.2);\n          transform: scale(1.2);\n}\n\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-927db766] {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  width: 500px;\n  height: 80vh;\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);\n  background: rgba(0, 0, 0, 0.5);\n  border-radius: 20px;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.chat-title[data-v-927db766] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: rgba(0, 0, 0, 0.2);\n  color: #fff;\n  text-transform: uppercase;\n  text-align: left;\n  padding: 10px 10px 10px 50px;\n}\n.chat-title h1[data-v-927db766], .chat-title h2[data-v-927db766] {\n  font-weight: normal;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-927db766] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-927db766] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-927db766] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-927db766] {\n  flex: 0 1 40px;\n  width: 100%;\n  background: rgba(0, 0, 0, 0.3);\n  padding: 10px;\n  position: relative;\n}\n.message-box .message-input[data-v-927db766] {\n  background: none;\n  border: none;\n  outline: none !important;\n  resize: none;\n  color: rgba(255, 255, 255, 0.7);\n  font-size: 11px;\n  height: 17px;\n  margin: 0;\n  padding-right: 20px;\n  width: 265px;\n}\n.message-box textarea[data-v-927db766]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-927db766] {\n  position: absolute;\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  color: #fff;\n  border: none;\n  background: #248A52;\n  font-size: 10px;\n  text-transform: uppercase;\n  line-height: 1;\n  padding: 6px 10px;\n  border-radius: 10px;\n  outline: none !important;\n  transition: background 0.2s ease;\n}\n.message-box .message-submit[data-v-927db766]:hover {\n  background: #1D7745;\n}\n.btn-logout[data-v-927db766] {\n  position: absolute;\n  top: 20px;\n  right: 50px;\n  z-index: 3;\n}", ""]);
 
 // exports
 
@@ -61507,26 +61500,16 @@ module.exports = function(module) {
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-    /*! no exports provided */
-    /***/ (function (module, __webpack_exports__, __webpack_require__) {
+    /*! no static exports found */
+    /***/ (function (module, exports, __webpack_require__) {
 
-        "use strict";
-        __webpack_require__.r(__webpack_exports__);
-        /* harmony import */
-        var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-        /* harmony import */
-        var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-        /* harmony import */
-        var _components_ChatLayout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/ChatLayout */ "./resources/js/components/ChatLayout.vue");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+// import axios from "axios";
 // import * as Vue from "vue";
-
-
-
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
@@ -61561,18 +61544,17 @@ var app = new Vue({
         index: false,
         currentUserLogin: {}
     },
-    mounted: function mounted() {
-        this.create();
-    },
     created: function created() {
         this.getCurrentUserLogin();
     },
+    mounted: function mounted() {
+        this.create();
+    },
     methods: {
         create: function create() {
-            axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.bUrl + '/dashboard/count').then(function (response) {
+            axios.get(this.bUrl + '/dashboard/count').then(function (response) {
                 // console.log(response.data); // show if success
                 app.posts = response.data; //we are putting data into our posts array
-                // app.posts.push({active: false })
             })["catch"](function (error) {
                 console.log(error); // run if we have error
             });
@@ -61586,14 +61568,13 @@ var app = new Vue({
         getCurrentUserLogin: function getCurrentUserLogin() {
             var _this = this;
 
-            axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/getUserLogin').then(function (response) {
+            axios.get('/getUserLogin').then(function (response) {
                 _this.currentUserLogin = response.data;
             })["catch"](function (error) {
-                console.log(error);
             });
         },
         addPost: function addPost() {
-            axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.bUrl + '/createpost', {
+            axios.post(this.bUrl + '/createpost', {
                 body: this.body
             }).then(function (response) {
                 app.body = "";
@@ -61608,14 +61589,14 @@ var app = new Vue({
         },
         deletePost: function deletePost(id) {
             console.log(id);
-            axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.bUrl + '/delete-post/' + id).then(function (response) {
+            axios.get(this.bUrl + '/delete-post/' + id).then(function (response) {
                 console.log(id); // show if success
             })["catch"](function (error) {
                 console.log(error); // run if we have error
             });
         },
         likePost: function likePost(id) {
-            axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(this.bUrl + '/likePost/' + id).then(function (response) {
+            axios.get(this.bUrl + '/likePost/' + id).then(function (response) {
                 console.log(response); // show if success
 
                 app.posts = response.data; //we are putting data into our posts array
@@ -61625,7 +61606,7 @@ var app = new Vue({
         },
         addComment: function addComment(post, key) {
             // alert(this.commentData);
-            axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(this.bUrl + '/addComment', {
+            axios.post(this.bUrl + '/addComment', {
                 comment: this.commentData[key],
                 id: post.id
             }).then(function (response) {
