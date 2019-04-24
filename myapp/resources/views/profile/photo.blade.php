@@ -1,15 +1,6 @@
 @extends('profile.profileMaster')
 @section('content')
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
-                <li class="breadcrumb-item active"><a href="{{url('/profile')}}/{{Auth::user()->name}}">Profile</a></li>
-                <li class="breadcrumb-item active"><a href="{{url('/editProfile')}}">Edit
-                        profile</a></li>
-                <li class="breadcrumb-item active"><a href="">Change image</a></li>
-            </ol>
-        </nav>
         <div class="row justify-content-center">
             @include('includes.sidebar')
             <div class="col-md-9">

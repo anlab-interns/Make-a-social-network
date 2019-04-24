@@ -29,7 +29,6 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'PostController@getDashBoard',
         'as' => 'dashboard',
     ]);
-
     Route::post('/createpost', [
         'uses' => 'PostController@addPost',
         'as' => 'addPost'
@@ -45,6 +44,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/addFriend/{id}', 'FriendController@addFriend')->name('addFriend');
 
     Route::get('/likePost/{id}', 'PostController@likePost')->name('likePost');
+
+    Route::get('/deleteLike/{id}', 'PostController@deleteLike')->name('deleteLike');
 
     Route::get('/showComments/{id}', 'PostController@showComments')->name('showComments');
 

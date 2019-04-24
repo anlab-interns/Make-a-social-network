@@ -44,10 +44,11 @@ const app = new Vue({
         commentData: {},
         showComment: null,
         index: false,
-        currentUserLogin: {}
+        currentUserLogin: {},
+        // friends: []
     },
     created() {
-        this.getCurrentUserLogin()
+        this.getCurrentUserLogin();
     },
     mounted: function () {
         this.create();
@@ -63,12 +64,29 @@ const app = new Vue({
                     console.log(error); // run if we have error
                 });
         },
+        getPosts() {
+            axios.get(this.bUrl + '/dashboard')
+                .then(response => {
+                    // console.log(response.data); // show if success
+                    // app.posts = response.data; //we are putting data into our posts array
+                })
+                .catch(function (error) {
+                    console.log(error); // run if we have error
+                });
+        },
         getRouteUrl(route, id) {
             return ('http://127.0.0.1:8000/' + route + "/" + id);
         },
         getImgUrl(pic) {
             return ('../../public/images/' + pic)
         },
+        // getFriends(){
+        //     axios.get('/getFriends').then(response => {
+        //         this.friends = response.data;
+        //     }).catch(error => {
+        //         console.log(error);
+        //     })
+        // },
         getCurrentUserLogin() {
             axios.get('/getUserLogin')
                 .then(response => {
@@ -95,10 +113,22 @@ const app = new Vue({
                 });
         },
         deletePost: function (id) {
-            console.log(id);
             axios.get(this.bUrl + '/delete-post/' + id)
                 .then(response => {
-                    console.log(id); // show if success
+                    console.log(response); // show if success
+                    if (response.status === 200) {
+                        app.posts = response.data;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error); // run if we have error
+                });
+        },
+        deleteLike: function (id) {
+            axios.get(this.bUrl + '/deleteLike/' + id)
+                .then(response => {
+                    console.log(response);
+                    // show if success
                 })
                 .catch(function (error) {
                     console.log(error); // run if we have error

@@ -34,24 +34,24 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
-                <ul class="navbar-nav mr-auto">
-                    <a class="navbar-brand" href="{{ url('/dashboard') }}">
-                        Posts
-                    </a>
-                    <a class="navbar-brand" href="{{url('/profile')}}/{{Auth::user()->name}}">
-                        Profile
-                    </a>
-                    <a class="navbar-brand" href="{{route('findFriend') }}">
-                        Find Friend
-                    </a>
-                    <li><a class="navbar-brand" href="{{route('requests') }}">
-                            My Request
-                            <span style="color: green; font-weight: bold;">({{App\Http\Controllers\FriendController::requestCount()}})</span>
-                        </a></li>
-                    {{--<li><a class="navbar-brand" href="{{route('friends') }}">--}}
-                    {{--Friend--}}
-                    {{--</a></li>--}}
-                </ul>
+            {{--                <ul class="navbar-nav mr-auto">--}}
+            {{--                    <a class="navbar-brand" href="{{ url('/dashboard') }}">--}}
+            {{--                        Posts--}}
+            {{--                    </a>--}}
+            {{--                    <a class="navbar-brand" href="{{url('/profile')}}/{{Auth::user()->name}}">--}}
+            {{--                        Profile--}}
+            {{--                    </a>--}}
+            {{--                    <a class="navbar-brand" href="{{route('findFriend') }}">--}}
+            {{--                        Find Friend--}}
+            {{--                    </a>--}}
+            {{--                    <li><a class="navbar-brand" href="{{route('requests') }}">--}}
+            {{--                            My Request--}}
+            {{--                            <span style="color: green; font-weight: bold;">({{App\Http\Controllers\FriendController::requestCount()}})</span>--}}
+            {{--                        </a></li>--}}
+            {{--                    --}}{{--<li><a class="navbar-brand" href="{{route('friends') }}">--}}
+            {{--                    --}}{{--Friend--}}
+            {{--                    --}}{{--</a></li>--}}
+            {{--                </ul>--}}
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">

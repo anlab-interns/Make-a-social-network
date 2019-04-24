@@ -15,6 +15,7 @@ class ProfileController extends Controller
             ->leftJoin('profiles', 'profiles.user_id', 'users.id')
             ->where('name', $name)
             ->get();
+
         return view('profile.profile', compact('userData'));
     }
 
@@ -23,14 +24,14 @@ class ProfileController extends Controller
 //        dd($request->all());
         $file = $request->file('pic');
         $file_name = $file->getClientOriginalName();
-
         $path = 'public/images';
         $file->move($path, $file_name);
         $user_id = Auth::user()->id;
+        $name = Auth::user()->name;
         DB::table('users')
             ->where('id', $user_id)
             ->update(['picture_path' => $file_name]);
-        return redirect()->route('profile');
+        return redirect()->route('profile', ['name' => $name]);
     }
 
     public function editProfile()
@@ -41,8 +42,9 @@ class ProfileController extends Controller
     public function updateProfile(Request $request)
     {
         $user_id = Auth::user()->id;
+        $name = Auth::user()->name;
         DB::table('profiles')->where('user_id', $user_id)->update($request->except('_token'));
-        return redirect()->route('profile');
+        return redirect()->route('profile', ['name' => $name]);
     }
 
 

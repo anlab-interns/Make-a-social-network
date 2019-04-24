@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Like;
 use App\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,8 +13,19 @@ class PostController extends Controller
     public function getDashboard()
     {
         // Lấy ra tất cả các post được sắp xếp theo thời gian khởi tạo và giảm dần
-        $posts = Post::with('user', 'likes', 'comments')->orderBy('created_at', 'desc')->get();
-        return view('dashboard', compact('posts'));
+//        $posts = Post::with('user', 'likes', 'comments')->orderBy('created_at', 'desc')->get();
+        $uid = Auth::user()->id;
+        $friend1 = DB::table('friends')->leftJoin('users', 'users.id', 'friends.user_requested')
+            ->where('status', 1)
+            ->where('requester', $uid)
+            ->get();
+        $friend2 = DB::table('friends')->leftJoin('users', 'users.id', 'friends.requester')
+            ->where('status', 1)
+            ->where('user_requested', $uid)
+            ->get();;
+
+        $friend = array_merge($friend1->toArray(), $friend2->toArray());
+        return view('dashboard', compact('friend'));
     }
 
     public function addPost(Request $request)
@@ -39,8 +49,6 @@ class PostController extends Controller
 
     public function createPostWithImage(Request $request)
     {
-//        dd($request->user()->posts());
-        // set validation rules
         $this->validate($request, [
             'body' => 'required|max:1000',
         ]);
@@ -62,23 +70,6 @@ class PostController extends Controller
         return redirect()->route('dashboard')->with(['message' => $message]);
     }
 
-    public function deletePost($post_id)
-    {
-        $uid = Auth::user()->id;
-        $post = DB::table('posts')
-            ->where('id', $post_id)
-            ->where('user_id', $uid)
-            ->delete();
-        if ($post) {
-            return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
-        }
-
-        $like = Like::where('post_id', $post_id)->first();
-        if ($like) {
-            $like->delete();
-        }
-        return redirect()->route('dashboard')->with(['message' => 'Post successfully deleted!']);
-    }
 
     public function postEditPost(Request $request)
     {
@@ -93,7 +84,28 @@ class PostController extends Controller
         $post->update();
         return response()->json(['new_body' => $post->body], 200);
     }
+    public function deletePost($post_id)
+    {
+        $uid = Auth::user()->id;
+        $post = DB::table('posts')
+            ->where('id', $post_id)
+            ->where('user_id', $uid)
+            ->delete();
+        if ($post) {
+            return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
+        }
+        return redirect()->route('dashboard');
+    }
 
+    public function deleteLike($post_id)
+    {
+        $uid = Auth::user()->id;
+        $like = DB::table('likes')->where('post_id', $post_id)->where('user_id', $uid)->delete();
+        if ($like) {
+            return redirect()->route('dashboard');
+        }
+        return redirect()->route('dashboard');
+    }
     public function likePost($id)
     {
         $likePost = DB::table('likes')->insert([

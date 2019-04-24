@@ -61542,7 +61542,8 @@ var app = new Vue({
         commentData: {},
         showComment: null,
         index: false,
-        currentUserLogin: {}
+        currentUserLogin: {} // friends: []
+
     },
     created: function created() {
         this.getCurrentUserLogin();
@@ -61559,12 +61560,26 @@ var app = new Vue({
                 console.log(error); // run if we have error
             });
         },
+        getPosts: function getPosts() {
+            axios.get(this.bUrl + '/dashboard').then(function (response) {// console.log(response.data); // show if success
+                // app.posts = response.data; //we are putting data into our posts array
+            })["catch"](function (error) {
+                console.log(error); // run if we have error
+            });
+        },
         getRouteUrl: function getRouteUrl(route, id) {
             return 'http://127.0.0.1:8000/' + route + "/" + id;
         },
         getImgUrl: function getImgUrl(pic) {
             return '../../public/images/' + pic;
         },
+        // getFriends(){
+        //     axios.get('/getFriends').then(response => {
+        //         this.friends = response.data;
+        //     }).catch(error => {
+        //         console.log(error);
+        //     })
+        // },
         getCurrentUserLogin: function getCurrentUserLogin() {
             var _this = this;
 
@@ -61588,9 +61603,19 @@ var app = new Vue({
             });
         },
         deletePost: function deletePost(id) {
-            console.log(id);
             axios.get(this.bUrl + '/delete-post/' + id).then(function (response) {
-                console.log(id); // show if success
+                console.log(response); // show if success
+
+                if (response.status === 200) {
+                    app.posts = response.data;
+                }
+            })["catch"](function (error) {
+                console.log(error); // run if we have error
+            });
+        },
+        deleteLike: function deleteLike(id) {
+            axios.get(this.bUrl + '/deleteLike/' + id).then(function (response) {
+                console.log(response); // show if success
             })["catch"](function (error) {
                 console.log(error); // run if we have error
             });
