@@ -104,8 +104,8 @@ Route::get('/dashboard/count', function () {
     return App\Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
 });
 
-Route::get('test-broadcast', function () {
-    broadcast(new App\Events\PrivateEvent(Auth::user()));
-});
+//Route::get('test-broadcast', function () {
+//    broadcast(new App\Events\PrivateEvent(Auth::user()));
+//});
 
 Auth::routes();
