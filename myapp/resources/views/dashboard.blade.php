@@ -4,7 +4,6 @@
 @section('title')
     My Dashboard
 @endsection
-
 @include('includes.message-block')
 @section('content')
     <div class="container row justify-content-center"
@@ -59,16 +58,14 @@
                                 data-postid="post.id"
                                 style="margin-left: 10px;margin-right: 10px">
                             <div style="display:flex;flex-direction: row">
-                                @if ((Auth::user()->picture_path == ''))
-                                    <img class="row rounded-circle" align="center"
-                                         style="margin-top: 5px;margin-right: 5px;margin-left: 5px"
-                                         src="{{asset('storage/male.png')}}" width="40px" height="40px">
-                                @else
-                                    <img class="row rounded-circle" align="center"
-                                         style=";margin-left: 0px;margin-right: 5px;margin-top: 5px;"
-                                         src="../../public/images/{{Auth::user()->picture_path}}" width="40px"
-                                         height="40px">
-                                @endIf
+                                <img v-if="getImgUrl(post.user.picture_path) == ''" class="row rounded-circle"
+                                     align="center"
+                                     style="margin-top: 5px;margin-right: 5px;margin-left: 5px"
+                                     src="{{asset('storage/male.png')}}" width="40px" height="40px">
+                                <img v-else class="row rounded-circle" align="center"
+                                     style=";margin-left: 0px;margin-right: 5px;margin-top: 5px;"
+                                     :src="getImgUrl(post.user.picture_path)" width="40px"
+                                     height="40px">
                                 <div>
                                     <span style="color:mediumblue;font-weight: bold">@{{post.user['name']}}</span>
                                     <div class="info">
@@ -110,7 +107,7 @@
                             <div v-if="showComment==key && index==true"
                                  style="background-color:#F6F7F9;width:99%;margin:0 auto">
                                 <div style="padding: 10px;margin-bottom: 10px">
-                                <textarea placeholder="Your post"
+                                <textarea placeholder="Your comment"
                                           v-model="commentData[key]"
                                           style="width: 99%; margin-top: 5px;margin-right: 5px;"></textarea>
                                     <button class="btn-success" @click="addComment(post,key)" style="margin-top: 10px">
@@ -119,24 +116,23 @@
                                 </div>
                                 <div v-for="comment in post.comments"
                                      style="list-style: none;margin-left: 20px;margin-bottom: 10px">
-                                    <div style="display: flex;flex-direction: row">
-                                        @if ((Auth::user()->picture_path == ''))
-                                            <img class="row rounded-circle" align="center"
-                                                 style="margin-top: 5px;margin-right: 5px"
-                                                 src="{{asset('storage/male.png')}}" width="40px" height="40px">
-                                        @else
-                                            <img class="row rounded-circle" align="center"
-                                                 style="margin-right: 5px;margin-top: 5px;"
-                                                 src="../../public/images/{{Auth::user()->picture_path}}" width="40px"
-                                                 {{--src="{{Auth::user()->picture_path}}" width="120px"--}}
-                                                 height="40px">
-                                        @endIf
-                                        <p style="font-weight: bold;color: blue;margin-left: 5px;margin-top: 11px;margin-bottom:11px;text-align: center">
+                                    <div v-for="user in allUsers" style="display: flex;flex-direction: row">
+                                        <img v-if="getImgUrl(user.picture_path) == '' && user.id == comment.user_id"
+                                             class="row rounded-circle"
+                                             align="center"
+                                             style="margin-top: 5px;margin-right: 5px;margin-left: 5px"
+                                             src="{{asset('storage/male.png')}}" width="40px" height="40px">
+                                        <img v-if="user.id == comment.user_id" class="row rounded-circle" align="center"
+                                             style=";margin-left: 0px;margin-right: 5px;margin-top: 5px;"
+                                             :src="getImgUrl(user.picture_path)" width="40px"
+                                             height="40px">
+                                        <p v-if="user.id == comment.user_id"
+                                           style="font-weight: bold;color: blue;margin-left: 5px;margin-top: 11px;margin-bottom:11px;text-align: center">
                                             @{{
-                                            post.user['name']
+                                            user['name']
                                             }}</p>
-                                        <div
-                                                style="padding:10px"
+                                        <div v-if="user.id == comment.user_id"
+                                             style="padding:10px"
                                         >@{{ comment.comment }}
                                         </div>
                                     </div>
@@ -151,26 +147,29 @@
         <div class="align-content-center">
             <ul class="list-group">
                 @foreach($friend as $ulist)
+
                     <div class="list-group-item "
                          style="display: flex;flex-direction: row">
-                        <div>
-                            @if (($ulist->picture_path == ''))
-                                <img class="row rounded-circle" align="center"
-                                     style="margin-top: 0px;margin-right: 5px;margin-left: 5px"
-                                     src="{{asset('storage/male.png')}}" width="30px" height="30px">
-                            @else
-                                <img class="row rounded-circle" align="center"
-                                     style="margin-top: 0px;margin-right: 5px;margin-left: 5px;"
-                                     src="../../public/images/{{$ulist->picture_path}}" width="30px"
-                                     height="30px">
-                            @endIf
-                        </div>
-                        <div>
-                            <p style="margin: auto">
-                                <a href="{{route('profile', $ulist->name)}}"
-                                   style="color: black">{{ucwords($ulist->name)}}</a>
-                            </p>
-                        </div>
+                        <a href="{{route('chat', $ulist->id)}}" style="display: block;">
+                            <div>
+                                @if (($ulist->picture_path == ''))
+                                    <img class="row rounded-circle" align="center"
+                                         style="margin-top: 0px;margin-right: 5px;margin-left: 5px"
+                                         src="{{asset('storage/male.png')}}" width="30px" height="30px">
+                                @else
+                                    <img class="row rounded-circle" align="center"
+                                         style="margin-top: 0px;margin-right: 5px;margin-left: 5px;"
+                                         src="../../public/images/{{$ulist->picture_path}}" width="30px"
+                                         height="30px">
+                                @endIf
+                            </div>
+                            <div>
+                                <p style="margin: auto">
+                                    <a href="{{route('profile', $ulist->name)}}"
+                                       style="color: black">{{ucwords($ulist->name)}}</a>
+                                </p>
+                            </div>
+                        </a>
                     </div>
                 @endforeach
             </ul>

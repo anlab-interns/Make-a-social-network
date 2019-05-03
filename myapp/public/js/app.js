@@ -1913,12 +1913,14 @@ __webpack_require__.r(__webpack_exports__);
 
         /* harmony default export */
         __webpack_exports__["default"] = ({
+            props: ['receiver_id'],
             components: {
                 ChatItem: _ChatItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
             },
             data: function data() {
                 return {
                     message: '',
+                    // receiver_id: null,
                     list_messages: [],
                     csrfToken: ''
                 };
@@ -1944,6 +1946,7 @@ __webpack_require__.r(__webpack_exports__);
                     var _this2 = this;
 
                     axios.get('/messages').then(function (response) {
+                        // console.log(response);
                         _this2.list_messages = response.data;
                     })["catch"](function (error) {
                         console.log(error);
@@ -1961,19 +1964,21 @@ __webpack_require__.r(__webpack_exports__);
                         });
                     }
                 },
-                sendMessage: function sendMessage() {
+                sendMessage: function sendMessage($id) {
                     var _this3 = this;
 
-                    axios.post('/messages', {
-                        message: this.message
+                    axios.post('/messages/' + $id, {
+                        message: this.message // receiver_id: this.receiver_id
+
                     }).then(function (response) {
                         _this3.list_messages.push({
                             message: _this3.message,
+                            // receiver_id: this.receiver_id,
                             created_at: new Date().toJSON().replace(/T|Z/gi, ' '),
                             user: _this3.$root.currentUserLogin
                         });
 
-                        _this3.message = '';
+                        _this3.message = ''; // this.receiver_id = null;
 
                         _this3.scrollToBottom();
                     })["catch"](function (error) {
@@ -49230,7 +49235,7 @@ var render = function() {
                                     ) {
                                         return null
                                     }
-                                    return _vm.sendMessage($event)
+                                    return _vm.sendMessage(_vm.receiver_id)
                                 },
                                 input: function ($event) {
                                     if ($event.target.composing) {
@@ -49246,7 +49251,11 @@ var render = function() {
                             {
                                 staticClass: "message-submit",
                                 attrs: {type: "button"},
-                                on: {click: _vm.sendMessage}
+                                on: {
+                                    click: function ($event) {
+                                        return _vm.sendMessage(_vm.receiver_id)
+                                    }
+                                }
                             },
                             [_vm._v("Send")]
                         )
@@ -61531,6 +61540,9 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Echo["private"]('user').listen('PrivateEvent', function (e) {
+    console.log('hello');
+});
 var app = new Vue({
     el: '#app',
     data: {
@@ -61542,11 +61554,14 @@ var app = new Vue({
         commentData: {},
         showComment: null,
         index: false,
-        currentUserLogin: {} // friends: []
-
+        currentUserLogin: {},
+        user_id: null,
+        friends: [],
+        allUsers: []
     },
     created: function created() {
         this.getCurrentUserLogin();
+        this.getAllUsers();
     },
     mounted: function mounted() {
         this.create();
@@ -61560,31 +61575,25 @@ var app = new Vue({
                 console.log(error); // run if we have error
             });
         },
-        getPosts: function getPosts() {
-            axios.get(this.bUrl + '/dashboard').then(function (response) {// console.log(response.data); // show if success
-                // app.posts = response.data; //we are putting data into our posts array
-            })["catch"](function (error) {
-                console.log(error); // run if we have error
-            });
-        },
         getRouteUrl: function getRouteUrl(route, id) {
             return 'http://127.0.0.1:8000/' + route + "/" + id;
         },
         getImgUrl: function getImgUrl(pic) {
             return '../../public/images/' + pic;
         },
-        // getFriends(){
-        //     axios.get('/getFriends').then(response => {
-        //         this.friends = response.data;
-        //     }).catch(error => {
-        //         console.log(error);
-        //     })
-        // },
-        getCurrentUserLogin: function getCurrentUserLogin() {
+        getAllUsers: function getAllUsers() {
             var _this = this;
 
+            axios.get(this.bUrl + '/getAllUsers').then(function (response) {
+                _this.allUsers = response.data;
+            })["catch"](function (error) {
+            });
+        },
+        getCurrentUserLogin: function getCurrentUserLogin() {
+            var _this2 = this;
+
             axios.get('/getUserLogin').then(function (response) {
-                _this.currentUserLogin = response.data;
+                _this2.currentUserLogin = response.data;
             })["catch"](function (error) {
             });
         },
@@ -61593,7 +61602,6 @@ var app = new Vue({
                 body: this.body
             }).then(function (response) {
                 app.body = "";
-                console.log(response); // show if success
 
                 if (response.status === 200) {
                     app.posts = response.data;
@@ -61604,8 +61612,6 @@ var app = new Vue({
         },
         deletePost: function deletePost(id) {
             axios.get(this.bUrl + '/delete-post/' + id).then(function (response) {
-                console.log(response); // show if success
-
                 if (response.status === 200) {
                     app.posts = response.data;
                 }

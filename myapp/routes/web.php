@@ -25,6 +25,10 @@ Route::get('/logout', function () {
     return redirect()->route('welcome');
 });
 Route::group(['middleware' => 'auth'], function () {
+    Route::get('/getAllUsers', function () {
+        return App\User::all();
+    })->name('getAllUsers');
+
     Route::get('/dashboard', [
         'uses' => 'PostController@getDashBoard',
         'as' => 'dashboard',
@@ -51,6 +55,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/addComment', 'PostController@addComment')->name('addComment');
 
+    Route::post('/edit', [
+        'uses' => 'PostController@postEditPost',
+        'as' => 'edit'
+    ]);
+
     Route::get('/profile/{name}', 'ProfileController@index')->name('profile');
 
     Route::post('/updatePhoto', 'ProfileController@updatePhoto')->name('updatePhoto');
@@ -74,37 +83,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/addFriendNotifications/{id}', 'FriendController@addFriendNotifications')->name('addFriendNotifications');
 
 });
-Route::get('/chat', function () {
-    return view('chat');
-})->middleware('auth');
+Route::get('/chat/{id}', 'ChatController@index')->middleware('auth')->name('chat');
 
-Route::get('/getUserLogin', function () {
-    return Auth::user();
-})->middleware('auth');
 
-Route::get('/messages', function () {
-    return App\Message::with('user')->get();
-})->middleware('auth');
+Route::get('/getUserLogin', 'ChatController@getUserLogin')->middleware('auth');
 
-Route::post('/messages', function () {
-    $user = Auth::user();
-    $message = $user->messages()->create(['message' => request()->get('message')]);
-    broadcast(new App\Events\MessagePosted($message, $user))->toOthers();
+Route::get('/messages', 'ChatController@getMessage')->middleware('auth');
 
-    return ['status' => 'OK'];
-})->middleware('auth');
+Route::post('/messages/{id}', 'ChatController@postMessage')->middleware('auth');
 
-Route::post('/edit', [
-    'uses' => 'PostController@postEditPost',
-    'as' => 'edit'
-]);
 
 Route::get('/changePhoto', function () {
     return view('profile.photo')->with('data', Auth::user()->profile);
 })->name('changePhoto');
 
-
-Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -112,7 +104,8 @@ Route::get('/dashboard/count', function () {
     return App\Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
 });
 
-
-Route::get('/try', function () {
-    return App\Post::with('user', 'likes', 'comments')->pluck('id');
+Route::get('test-broadcast', function () {
+    broadcast(new App\Events\PrivateEvent(Auth::user()));
 });
+
+Auth::routes();

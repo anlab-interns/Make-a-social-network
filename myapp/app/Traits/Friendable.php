@@ -12,10 +12,6 @@ use App\Friend;
 
 trait Friendable
 {
-    public function test()
-    {
-        return 'hi';
-    }
 
     /**
      * @param $id

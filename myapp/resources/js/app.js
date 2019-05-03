@@ -33,6 +33,10 @@ Vue.component('chat-layout', require('./components/ChatLayout.vue').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Echo.private('user')
+    .listen('PrivateEvent', (e) => {
+        console.log('hello');
+    });
 const app = new Vue({
     el: '#app',
     data: {
@@ -45,10 +49,13 @@ const app = new Vue({
         showComment: null,
         index: false,
         currentUserLogin: {},
-        // friends: []
+        user_id: null,
+        friends: [],
+        allUsers: []
     },
     created() {
         this.getCurrentUserLogin();
+        this.getAllUsers();
     },
     mounted: function () {
         this.create();
@@ -64,29 +71,22 @@ const app = new Vue({
                     console.log(error); // run if we have error
                 });
         },
-        getPosts() {
-            axios.get(this.bUrl + '/dashboard')
-                .then(response => {
-                    // console.log(response.data); // show if success
-                    // app.posts = response.data; //we are putting data into our posts array
-                })
-                .catch(function (error) {
-                    console.log(error); // run if we have error
-                });
-        },
+
         getRouteUrl(route, id) {
             return ('http://127.0.0.1:8000/' + route + "/" + id);
         },
         getImgUrl(pic) {
             return ('../../public/images/' + pic)
         },
-        // getFriends(){
-        //     axios.get('/getFriends').then(response => {
-        //         this.friends = response.data;
-        //     }).catch(error => {
-        //         console.log(error);
-        //     })
-        // },
+        getAllUsers() {
+            axios.get(this.bUrl + '/getAllUsers')
+                .then(response => {
+                    this.allUsers = response.data;
+                })
+                .catch(error => {
+
+                })
+        },
         getCurrentUserLogin() {
             axios.get('/getUserLogin')
                 .then(response => {
@@ -102,8 +102,6 @@ const app = new Vue({
             })
                 .then((response) => {
                     app.body = "";
-
-                    console.log(response); // show if success
                     if (response.status === 200) {
                         app.posts = response.data;
                     }
@@ -115,7 +113,6 @@ const app = new Vue({
         deletePost: function (id) {
             axios.get(this.bUrl + '/delete-post/' + id)
                 .then(response => {
-                    console.log(response); // show if success
                     if (response.status === 200) {
                         app.posts = response.data;
                     }

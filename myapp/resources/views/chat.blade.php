@@ -29,7 +29,7 @@
 </head>
 <body>
 <div id="app">
-    <chat-layout></chat-layout>
+    <chat-layout v-bind:receiver_id={{$id}}></chat-layout>
 </div>
 <script src="/js/app.js"></script>
 </body>

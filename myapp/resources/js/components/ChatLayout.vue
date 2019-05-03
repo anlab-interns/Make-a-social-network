@@ -10,9 +10,9 @@
                 </div>
             </div>
             <div class="message-box">
-                <input type="text" v-model="message" @keyup.enter="sendMessage" class="message-input"
+                <input type="text" v-model="message" @keyup.enter="sendMessage(receiver_id)" class="message-input"
                        placeholder="Type message..."/>
-                <button type="button" class="message-submit" @click="sendMessage">Send</button>
+                <button type="button" class="message-submit" @click="sendMessage(receiver_id)">Send</button>
             </div>
         </div>
         <div class="bg"></div>
@@ -20,25 +20,28 @@
 </template>
 
 <script>
+
     import ChatItem from './ChatItem.vue'
 
     export default {
+        props: ['receiver_id'],
         components: {
             ChatItem
         },
         data() {
             return {
                 message: '',
+                // receiver_id: null,
                 list_messages: [],
                 csrfToken: ''
             }
         },
         created() {
-            this.loadMessage()
+            this.loadMessage();
             Echo.channel('chatroom')
                 .listen('MessagePosted', (data) => {
-                    let message = data.message
-                    message.user = data.user
+                    let message = data.message;
+                    message.user = data.user;
                     this.list_messages.push(message)
                     this.scrollToBottom()
                 })
@@ -50,6 +53,7 @@
             loadMessage() {
                 axios.get('/messages')
                     .then(response => {
+                        // console.log(response);
                         this.list_messages = response.data
                     })
                     .catch(error => {
@@ -66,23 +70,26 @@
                 }
 
             },
-            sendMessage() {
-                axios.post('/messages', {
-                    message: this.message
+            sendMessage($id) {
+                axios.post('/messages/' + $id, {
+                    message: this.message,
+                    // receiver_id: this.receiver_id
                 })
                     .then(response => {
                         this.list_messages.push({
                             message: this.message,
+                            // receiver_id: this.receiver_id,
                             created_at: new Date().toJSON().replace(/T|Z/gi, ' '),
                             user: this.$root.currentUserLogin
-                        })
-                        this.message = ''
+                        });
+                        this.message = '';
+                        // this.receiver_id = null;
                         this.scrollToBottom()
                     })
                     .catch(error => {
                         console.log(error)
                     })
-            }
+            },
         }
     }
 </script>
