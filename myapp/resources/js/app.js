@@ -25,7 +25,7 @@ window.Vue = require('vue');
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('chat-layout', require('./components/ChatLayout.vue').default);
-
+Vue.component('chat-box', require('./components/ChatBox.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -33,12 +33,9 @@ Vue.component('chat-layout', require('./components/ChatLayout.vue').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Echo.private('user')
-    .listen('PrivateEvent', (e) => {
-        console.log('hello');
-    });
 const app = new Vue({
     el: '#app',
+    // props: ['friendInbox'],
     data: {
         msg: 'hello',
         body: '',
@@ -51,11 +48,14 @@ const app = new Vue({
         currentUserLogin: {},
         user_id: null,
         friends: [],
+        friendInbox: null,
+        inboxWindowVisibility: 'hidden',
         allUsers: []
     },
     created() {
         this.getCurrentUserLogin();
         this.getAllUsers();
+        this.getFriendList();
     },
     mounted: function () {
         this.create();
@@ -95,6 +95,25 @@ const app = new Vue({
                 .catch(error => {
 
                 })
+        },
+        getFriendList() {
+            axios.get('/getFriendList')
+                .then(response => {
+                    this.friends = response.data
+                })
+                .catch(error => {
+
+                })
+        },
+        getFriendInbox(friend) {
+            this.friendInbox = friend;
+        },
+        displayInboxWindow() {
+            if (this.inboxWindowVisibility === 'hidden') {
+                this.inboxWindowVisibility = 'visible'
+            } else if (this.inboxWindowVisibility === 'visible') {
+                this.inboxWindowVisibility = 'hidden'
+            }
         },
         addPost: function () {
             axios.post(this.bUrl + '/createpost', {

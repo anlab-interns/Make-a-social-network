@@ -13,6 +13,7 @@
 
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 
@@ -83,14 +84,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/addFriendNotifications/{id}', 'FriendController@addFriendNotifications')->name('addFriendNotifications');
 
 });
-Route::get('/chat/{id}', 'ChatController@index')->middleware('auth')->name('chat');
+Route::get('/chat', 'ChatController@index')->middleware('auth')->name('chat');
 
 
 Route::get('/getUserLogin', 'ChatController@getUserLogin')->middleware('auth');
 
 Route::get('/messages', 'ChatController@getMessage')->middleware('auth');
 
-Route::post('/messages/{id}', 'ChatController@postMessage')->middleware('auth');
+Route::post('/messages', 'ChatController@postMessage')->middleware('auth');
+
+Route::get('/privateMessages/{id}', 'ChatController@getPrivateMessage')->middleware('auth');
+
+Route::post('/privateMessages', 'ChatController@postPrivateMessage')->middleware('auth');
 
 
 Route::get('/changePhoto', function () {
@@ -98,7 +103,20 @@ Route::get('/changePhoto', function () {
 })->name('changePhoto');
 
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/getFriendList', function () {
+    $uid = Auth::user()->id;
+    $friend1 = DB::table('friends')->leftJoin('users', 'users.id', 'friends.user_requested')
+        ->where('status', 1)
+        ->where('requester', $uid)
+        ->get();
+    $friend2 = DB::table('friends')->leftJoin('users', 'users.id', 'friends.requester')
+        ->where('status', 1)
+        ->where('user_requested', $uid)
+        ->get();;
+
+    $friend = array_merge($friend1->toArray(), $friend2->toArray());
+    return $friend;
+})->name('getFriendId');
 
 Route::get('/dashboard/count', function () {
     return App\Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
@@ -107,5 +125,7 @@ Route::get('/dashboard/count', function () {
 //Route::get('test-broadcast', function () {
 //    broadcast(new App\Events\PrivateEvent(Auth::user()));
 //});
+
+Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();

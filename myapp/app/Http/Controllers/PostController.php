@@ -12,8 +12,6 @@ class PostController extends Controller
 {
     public function getDashboard()
     {
-        // Lấy ra tất cả các post được sắp xếp theo thời gian khởi tạo và giảm dần
-//        $posts = Post::with('user', 'likes', 'comments')->orderBy('created_at', 'desc')->get();
         $uid = Auth::user()->id;
         $friend1 = DB::table('friends')->leftJoin('users', 'users.id', 'friends.user_requested')
             ->where('status', 1)

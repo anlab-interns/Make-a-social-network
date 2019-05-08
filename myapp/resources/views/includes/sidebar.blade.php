@@ -8,6 +8,9 @@
         <li class="list-group-item"><a href="{{route('friends') }}">
                 Friend
             </a></li>
+        <li class="list-group-item"><a href="{{route('chat') }}">
+                Conversation
+            </a></li>
         <li class="list-group-item"><a href="{{route('requests') }}">
                 My Request
                 <span style="color: green; font-weight: bold;">({{App\Http\Controllers\FriendController::requestCount()}})</span>

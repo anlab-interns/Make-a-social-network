@@ -8,14 +8,13 @@
 @section('content')
     <div class="container row justify-content-center"
          style="justify-content: center; align-content: center;margin: auto"
-         xmlns:v-on="http://www.w3.org/1999/xhtml">
+         xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
         @include('includes.sidebar')
         <div class="col-md-6">
             <section class="row new-post">
                 <div class="card" style="margin: auto;border-width: 1px;border-color: gray;width: 90%">
                     <div class="card-header">What do you think?</div>
                     <div>
-
                         <form v-on:submit.prevent="addPost" enctype="multipart/form-data" method="post">
                             <div class="form-group" style="display: flex;flex-direction: row">
                                 @if ((Auth::user()->picture_path == ''))
@@ -144,35 +143,48 @@
                 </div>
             </section>
         </div>
-        <div class="align-content-center">
-            <ul class="list-group">
-                @foreach($friend as $ulist)
 
-                    <div class="list-group-item "
-                         style="display: flex;flex-direction: row">
-                        <a href="{{route('chat', $ulist->id)}}" style="display: block;">
-                            <div>
-                                @if (($ulist->picture_path == ''))
-                                    <img class="row rounded-circle" align="center"
-                                         style="margin-top: 0px;margin-right: 5px;margin-left: 5px"
-                                         src="{{asset('storage/male.png')}}" width="30px" height="30px">
-                                @else
-                                    <img class="row rounded-circle" align="center"
-                                         style="margin-top: 0px;margin-right: 5px;margin-left: 5px;"
-                                         src="../../public/images/{{$ulist->picture_path}}" width="30px"
-                                         height="30px">
-                                @endIf
-                            </div>
-                            <div>
-                                <p style="margin: auto">
-                                    <a href="{{route('profile', $ulist->name)}}"
-                                       style="color: black">{{ucwords($ulist->name)}}</a>
-                                </p>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
+        <div class="align-content-center">
+            <ul v-for="friend in friends" class="list-group">
+                <div class="list-group-item "
+                     style="display: flex;flex-direction: row">
+                    <a href="#" @click="getFriendInbox(friend);displayInboxWindow()" style="display: block;">
+                        <div>
+                            <img v-if="friend.picture_path == ''" class="row rounded-circle" align="center"
+                                 style="margin-top: 0px;margin-right: 5px;margin-left: 5px"
+                                 src="{{asset('storage/male.png')}}" width="30px" height="30px">
+                            <img v-else class="row rounded-circle" align="center"
+                                 style="margin-top: 0px;margin-right: 5px;margin-left: 5px;"
+                                 :src="getImgUrl(friend.picture_path)" width="30px"
+                                 height="30px">
+                        </div>
+                        <div>
+                            <p style="margin: auto">
+                                <a href="#"
+                                   style="color: black">@{{(friend.name)}}</a>
+                            </p>
+                        </div>
+                    </a>
+                </div>
             </ul>
+        </div>
+        <div v-if="friendInbox != null" v-bind:style="{visibility: inboxWindowVisibility}" class="card" style="margin: auto;position: absolute;
+                            z-index: 1;
+                            bottom: 9px;
+                            right: 10px;border-width: 1px;border-color: gray;width: 15%;height: 30%">
+            <div class="row">
+                <img v-if="friendInbox.picture_path == ''" class="row rounded-circle" align="center"
+                     style="margin-top: 5px;margin-right: 5px;margin-left: 20px"
+                     src="{{asset('storage/male.png')}}" width="40px" height="40px">
+                <img v-else class="row rounded-circle" align="center"
+                     style=";margin-left: 20px;margin-right: 5px;margin-top: 5px;"
+                     :src="getImgUrl(friendInbox.picture_path)" width="40px"
+                     height="40px">
+                <p style="font-weight: bold">@{{friendInbox.name}}</p>
+            </div>
+            <div class="card-body">
+                <chat-box v-bind:receiver_id="friendInbox.id"></chat-box>
+            </div>
         </div>
         <div class="modal fade" tabindex="-1" role="dialog" id="edit-modal">
             <div class="modal-dialog">
