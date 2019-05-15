@@ -1,4 +1,4 @@
-<div class="align-content-center">
+<div class="align-content-center col-md-2">
     <ul class="list-group">
         <li class="list-group-item"><a href="{{route('dashboard')}}">Home</a></li>
         <li class="list-group-item"><a href="{{url('/profile')}}/{{Auth::user()->name}}">Profile</a></li>

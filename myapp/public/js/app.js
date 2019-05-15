@@ -1874,12 +1874,10 @@ module.exports = {
 //
 //
 //
-//
-//
 
         /* harmony default export */
         __webpack_exports__["default"] = ({
-            props: ['receiver_id'],
+            props: ['receiver_id', 'room_id'],
             components: {
                 ChatItem: _ChatItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
             },
@@ -1893,8 +1891,9 @@ module.exports = {
             created: function created() {
                 var _this = this;
 
-                this.loadMessage();
-                Echo["private"]('message.' + this.receiver_id).listen('PrivateEvent', function (data) {
+                this.loadMessage(this.room_id);
+                Echo["private"]('message.' + this.room_id).listen('PrivateEvent', function (data) {
+                    console.log('listening');
                     var message = data.message;
                     message.user = data.user;
 
@@ -1902,6 +1901,9 @@ module.exports = {
 
                     _this.scrollToBottom();
                 });
+            },
+            updated: function updated() {
+                this.loadMessage(this.room_id);
             },
             mounted: function mounted() {
                 this.csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
@@ -1911,7 +1913,6 @@ module.exports = {
                     var _this2 = this;
 
                     axios.get('/privateMessages/' + id).then(function (response) {
-                        // console.log(response);
                         _this2.list_messages = response.data;
                     })["catch"](function (error) {
                         console.log(error);
@@ -1934,7 +1935,8 @@ module.exports = {
 
                     axios.post('/privateMessages', {
                         message: this.message,
-                        receiver_id: this.receiver_id
+                        receiver_id: this.receiver_id,
+                        room_id: this.room_id
                     }).then(function (response) {
                         _this3.list_messages.push({
                             message: _this3.message,
@@ -1980,8 +1982,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-            props: ['message']
+            props: ['message'],
+            methods: {
+                getImgUrl: function getImgUrl(pic) {
+                    return '../../../public/images/' + pic;
+                }
+            }
         });
 
         /***/
@@ -9051,7 +9068,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // module
-        exports.push([module.i, ".message-input[data-v-5142db38] {\n  position: absolute;\n  z-index: 1;\n  bottom: 9px;\n  left: 10px;\n  background: none;\n  border: none;\n  outline: none !important;\n  resize: none;\n  color: rgba(0, 0, 0, 0.7);\n  font-size: 11px;\n  height: 17px;\n  margin: 0;\n  padding-right: 20px;\n  width: 200px;\n}\n.message-submit[data-v-5142db38] {\n  position: absolute;\n  z-index: 1;\n  bottom: 9px;\n  right: 10px;\n  color: #fff;\n  border: none;\n  background: #248A52;\n  font-size: 10px;\n  text-transform: uppercase;\n  line-height: 1;\n  padding: 6px 10px;\n  border-radius: 10px;\n  outline: none !important;\n  transition: background 0.2s ease;\n}", ""]);
+        exports.push([module.i, ".message-input[data-v-5142db38] {\n  position: absolute;\n  z-index: 1;\n  bottom: 0px;\n  left: 10px;\n  background: none;\n  border: none;\n  outline: none !important;\n  resize: none;\n  color: rgba(0, 0, 0, 0.7);\n  font-size: 11px;\n  height: 17px;\n  margin: 0;\n  /*padding-right: 10px;*/\n  width: 255px;\n}\n.message-submit[data-v-5142db38] {\n  position: absolute;\n  z-index: 1;\n  bottom: 0px;\n  right: 0px;\n  color: #fff;\n  border: none;\n  background: #248A52;\n  font-size: 10px;\n  text-transform: uppercase;\n  line-height: 1;\n  padding: 6px 10px;\n  border-radius: 10px;\n  outline: none !important;\n  transition: background 0.2s ease;\n}", ""]);
 
 // exports
 
@@ -9072,7 +9089,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // module
-        exports.push([module.i, ".message[data-v-ccaa2314] {\n  display: flex;\n  color: #00b8ff;\n}\n.message .message-item[data-v-ccaa2314]:not(:last-child) {\n  margin-right: 5px;\n}\n.message[data-v-ccaa2314]:not(:last-child) {\n  padding-bottom: 20px;\n}\n.is-current-user[data-v-ccaa2314] {\n  color: #a900ff;\n}", ""]);
+        exports.push([module.i, ".message[data-v-ccaa2314] {\n  border: 2px solid #dedede;\n  background-color: #f1f1f1;\n  border-radius: 15px;\n  padding: 5px 10px;\n  margin: 10px 0;\n}\n.message .message-item[data-v-ccaa2314]:not(:last-child) {\n  margin-right: 5px;\n}\n.message[data-v-ccaa2314]:not(:last-child) {\n  padding-bottom: 10px;\n}\n.is-current-user[data-v-ccaa2314] {\n  border-radius: 15px;\n  padding: 5px 10px;\n  margin: 10px 20px;\n  background-color: #ddd;\n  border: 2px solid #ccc;\n}\n.is-float-right[data-v-ccaa2314] {\n  display: flex;\n  justify-content: flex-end;\n  margin-right: 5px;\n}\n.is-row[data-v-ccaa2314] {\n  flex-direction: row;\n}\n.is-test[data-v-ccaa2314] {\n  justify-content: flex-end !important;\n}", ""]);
 
 // exports
 
@@ -49307,56 +49324,88 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
             var _vm = this
             var _h = _vm.$createElement
             var _c = _vm._self._c || _h
-            return _c("div", [
-                _vm._m(0),
-                _vm._v(" "),
-                _c("input", {
-                    staticClass: "message-input",
-                    attrs: {type: "text", placeholder: "Type message..."},
-                    on: {
-                        keyup: function ($event) {
-                            if (
-                                !$event.type.indexOf("key") &&
-                                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                            ) {
-                                return null
-                            }
-                            return _vm.sendMessage($event)
-                        }
+            return _c(
+                "div",
+                {
+                    staticStyle: {
+                        "flex-direction": "column",
+                        height: "400px",
+                        padding: "0px"
                     }
-    }),
-                _vm._v(" "),
-                _c(
-                    "button",
-                    {
-                        staticClass: "message-submit",
-                        attrs: {type: "button"},
-                        on: {click: _vm.sendMessage}
-                    },
-                    [_vm._v("Send")]
-                )
-            ])
-        }
-        var staticRenderFns = [
-            function () {
-                var _vm = this
-                var _h = _vm.$createElement
-                var _c = _vm._self._c || _h
-                return _c("div", {staticClass: "messages"}, [
-                    _c("div", {staticClass: "messages-content"}, [
-                        _c("p", [_vm._v("hello")]),
-                        _vm._v(" "),
-                        _c("p", [_vm._v("hello")]),
-                        _vm._v(" "),
-                        _c("p", [_vm._v("hello")]),
-                        _vm._v(" "),
-                        _c("p", [_vm._v("hello")]),
-                        _vm._v(" "),
-                        _c("p", [_vm._v("hello")])
-                    ])
-                ])
+                },
+                [
+                    _c(
+                        "div",
+                        {
+                            staticClass: "messages",
+                            staticStyle: {
+                                height: "67%",
+                                "overflow-y": "scroll",
+                                "overflow-x": "hidden"
+                            }
+                        },
+                        [
+                            _c(
+                                "div",
+                                {
+                                    staticClass: "messages-content",
+                                    staticStyle: {"margin-left": "10px"}
+                                },
+                                _vm._l(_vm.list_messages, function (message, index) {
+                                    return _c("ChatItem", {key: index, attrs: {message: message}})
+                                }),
+                                1
+                            )
+                        ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                        "div",
+                        {
+                            staticStyle: {
+                                flex: "0 1 40px",
+                                width: "100%",
+                                padding: "10px",
+                                position: "relative"
+                            }
+                        },
+                        [
+                            _c("input", {
+                                directives: [
+                                    {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.message,
+                                        expression: "message"
+                                    }
+                                ],
+                                staticClass: "message-input",
+                                attrs: {type: "text", placeholder: "Type message..."},
+                                domProps: {value: _vm.message},
+                                on: {
+                                    keyup: function ($event) {
+                                        if (
+                                            !$event.type.indexOf("key") &&
+                                            _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                                        ) {
+                                            return null
+                                        }
+                                        return _vm.sendMessage($event)
+                                    },
+                                    input: function ($event) {
+                                        if ($event.target.composing) {
+                                            return
+                                        }
+                                        _vm.message = $event.target.value
+                                    }
             }
-        ]
+                            })
+                        ]
+                    )
+                ]
+            )
+        }
+        var staticRenderFns = []
         render._withStripped = true
 
 
@@ -49382,27 +49431,52 @@ var render = function() {
     return _c(
         "div",
         {
-            staticClass: "message",
+            staticClass: "row",
             class: {
-                "is-current-user": _vm.$root.currentUserLogin.id === _vm.message.user.id
+                "is-test": _vm.$root.currentUserLogin.id === _vm.message.user.id
             }
         },
         [
-            _c("div", {staticClass: "message-item user-name"}, [
-                _vm._v("\n        " + _vm._s(_vm.message.user.name) + "\n    ")
-            ]),
+            _vm.message.user.picture_path === "" &&
+            _vm.$root.currentUserLogin.id !== _vm.message.user.id
+                ? _c("img", {
+                    staticClass: "rounded-circle ",
+                    staticStyle: {margin: "10px 10px"},
+                    attrs: {
+                        src: __webpack_require__(/*! ../../../public/public/images/male.png */ "./public/public/images/male.png"),
+                        width: "40px",
+                        height: "40px"
+                    }
+                })
+                : _vm.message.user.picture_path !== "" &&
+                _vm.$root.currentUserLogin.id !== _vm.message.user.id
+                ? _c("img", {
+                    staticClass: "rounded-circle",
+                    staticStyle: {margin: "10px 5px"},
+                    attrs: {
+                        src: _vm.getImgUrl(_vm.message.user.picture_path),
+                        width: "40px",
+                        height: "40px"
+                    }
+                })
+                : _vm._e(),
             _vm._v(" "),
-            _c("div", {staticClass: "message-item timestamp"}, [
-                _vm._v(
-                    "\n        | " +
-                    _vm._s(_vm.message.created_at.split(" ")[1]) +
-                    ":\n    "
-                )
-            ]),
-            _vm._v(" "),
-            _c("div", {staticClass: "message-item text-message"}, [
-                _vm._v("\n        " + _vm._s(_vm.message.message) + "\n    ")
-            ])
+            _c(
+                "div",
+                {
+                    staticClass: "message message-item row",
+                    class: {
+                        "is-current-user":
+                            _vm.$root.currentUserLogin.id === _vm.message.user.id
+                    },
+                    staticStyle: {
+                        "word-break": "break-word",
+                        display: "flex",
+                        "align-items": "center"
+                    }
+                },
+                [_vm._v("\n        " + _vm._s(_vm.message.message) + "\n    ")]
+            )
         ]
     )
 }
@@ -61737,6 +61811,19 @@ module.exports = function(module) {
         /***/
     }),
 
+    /***/
+    "./public/public/images/male.png":
+    /*!***************************************!*\
+  !*** ./public/public/images/male.png ***!
+  \***************************************/
+    /*! no static exports found */
+    /***/ (function (module, exports) {
+
+        module.exports = "/images/male.png?cf89e8e6daa9dabc8174c303e4d53d3a";
+
+        /***/
+    }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -61789,6 +61876,9 @@ var app = new Vue({
         user_id: null,
         friends: [],
         friendInbox: null,
+        chatRoom: null,
+        isInbox: false,
+        inboxId: null,
         inboxWindowVisibility: 'hidden',
         allUsers: []
     },
@@ -61842,11 +61932,25 @@ var app = new Vue({
         getFriendInbox: function getFriendInbox(friend) {
             this.friendInbox = friend;
         },
-        displayInboxWindow: function displayInboxWindow() {
-            if (this.inboxWindowVisibility === 'hidden') {
-                this.inboxWindowVisibility = 'visible';
-            } else if (this.inboxWindowVisibility === 'visible') {
-                this.inboxWindowVisibility = 'hidden';
+        postChatRoom: function postChatRoom(id) {
+            var _this4 = this;
+
+            axios.post('/postChatRoom', {
+                creater_id: this.currentUserLogin.id,
+                member_id: id
+            }).then(function (response) {
+                console.log(response.data);
+                _this4.chatRoom = null;
+                _this4.chatRoom = response.data;
+            })["catch"](function (error) {
+            });
+        },
+        displayInboxWindow: function displayInboxWindow(item) {
+            if (app.inboxId !== item) {
+                app.inboxId = item;
+                app.isInbox = true;
+            } else {
+                app.isInbox = !app.isInbox;
             }
         },
         addPost: function addPost() {
@@ -61888,7 +61992,6 @@ var app = new Vue({
             });
         },
         addComment: function addComment(post, key) {
-            // alert(this.commentData);
             axios.post(this.bUrl + '/addComment', {
                 comment: this.commentData[key],
                 id: post.id

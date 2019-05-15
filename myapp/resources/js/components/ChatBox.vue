@@ -1,18 +1,16 @@
 <template>
-    <div>
-        <div class="messages">
-            <div class="messages-content">
-                <!--                <ChatItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatItem>-->
-                <p>hello</p>
-                <p>hello</p>
-                <p>hello</p>
-                <p>hello</p>
-                <p>hello</p>
+    <div style="flex-direction: column;height:400px;padding: 0px;">
+        <div class="messages" style="height: 67%;overflow-y: scroll;overflow-x: hidden">
+            <div class="messages-content" style="margin-left: 10px">
+                <ChatItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatItem>
             </div>
         </div>
-        <input type="text" class="message-input" @keyup.enter="sendMessage"
-               placeholder="Type message..."/>
-        <button type="button" class="message-submit" @click="sendMessage">Send</button>
+        <div style="flex: 0 1 40px;width: 100%;padding: 10px;position: relative;">
+            <input type="text" v-model="message" class="message-input" @keyup.enter="sendMessage"
+                   placeholder="Type message..."/>
+            <!--            <button type="button" class="message-submit" @click="sendMessage">Send</button>-->
+        </div>
+
     </div>
 </template>
 
@@ -20,7 +18,7 @@
     import ChatItem from './ChatItem.vue'
 
     export default {
-        props: ['receiver_id'],
+        props: ['receiver_id', 'room_id'],
         components: {
             ChatItem
         },
@@ -32,14 +30,18 @@
             }
         },
         created() {
-            this.loadMessage();
-            Echo.private('message.' + this.receiver_id)
+            this.loadMessage(this.room_id);
+            Echo.private('message.' + this.room_id)
                 .listen('PrivateEvent', (data) => {
+                    console.log('listening');
                     let message = data.message;
                     message.user = data.user;
                     this.list_messages.push(message);
                     this.scrollToBottom()
                 })
+        },
+        updated() {
+            this.loadMessage(this.room_id);
         },
         mounted() {
             this.csrfToken = document.head.querySelector('meta[name="csrf-token"]').content
@@ -48,7 +50,6 @@
             loadMessage(id) {
                 axios.get('/privateMessages/' + id)
                     .then(response => {
-                        // console.log(response);
                         this.list_messages = response.data
                     })
                     .catch(error => {
@@ -68,7 +69,8 @@
             sendMessage() {
                 axios.post('/privateMessages', {
                     message: this.message,
-                    receiver_id: this.receiver_id
+                    receiver_id: this.receiver_id,
+                    room_id: this.room_id
                 })
                     .then(response => {
                         this.list_messages.push({
@@ -92,7 +94,7 @@
     .message-input {
         position: absolute;
         z-index: 1;
-        bottom: 9px;
+        bottom: 0px;
         left: 10px;
         background: none;
         border: none;
@@ -102,15 +104,15 @@
         font-size: 11px;
         height: 17px;
         margin: 0;
-        padding-right: 20px;
-        width: 200px;
+        /*padding-right: 10px;*/
+        width: 255px;
     }
 
     .message-submit {
         position: absolute;
         z-index: 1;
-        bottom: 9px;
-        right: 10px;
+        bottom: 0px;
+        right: 0px;
         color: #fff;
         border: none;
         background: #248A52;

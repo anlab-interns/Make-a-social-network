@@ -8,9 +8,9 @@
 @section('content')
     <div class="container row justify-content-center"
          style="justify-content: center; align-content: center;margin: auto"
-         xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+         xmlns:v-on="http://www.w3.org/1999/xhtml">
         @include('includes.sidebar')
-        <div class="col-md-6">
+        <div class="col-md-8">
             <section class="row new-post">
                 <div class="card" style="margin: auto;border-width: 1px;border-color: gray;width: 90%">
                     <div class="card-header">What do you think?</div>
@@ -144,11 +144,12 @@
             </section>
         </div>
 
-        <div class="align-content-center">
+        <div class="align-content-center col-md-2">
             <ul v-for="friend in friends" class="list-group">
                 <div class="list-group-item "
                      style="display: flex;flex-direction: row">
-                    <a href="#" @click="getFriendInbox(friend);displayInboxWindow()" style="display: block;">
+                    <a href="#" @click="getFriendInbox(friend);postChatRoom(friend.id);displayInboxWindow(friend.id)"
+                       style="display: block;">
                         <div>
                             <img v-if="friend.picture_path == ''" class="row rounded-circle" align="center"
                                  style="margin-top: 0px;margin-right: 5px;margin-left: 5px"
@@ -168,23 +169,23 @@
                 </div>
             </ul>
         </div>
-        <div v-if="friendInbox != null" v-bind:style="{visibility: inboxWindowVisibility}" class="card" style="margin: auto;position: absolute;
+        <div v-if="friendInbox != null && chatRoom != null && isInbox==true" class="card"
+             style="margin: auto;position: absolute;
                             z-index: 1;
-                            bottom: 9px;
-                            right: 10px;border-width: 1px;border-color: gray;width: 15%;height: 30%">
-            <div class="row">
+                            bottom: 2px;
+                            right: 20px;border-width: 1px;border-color: gray;width: 15%;height: 30.5%">
+            <div class="row card-header" style="margin: 0;">
                 <img v-if="friendInbox.picture_path == ''" class="row rounded-circle" align="center"
-                     style="margin-top: 5px;margin-right: 5px;margin-left: 20px"
+                     style="margin-left: 0px;margin-right: 5px;"
                      src="{{asset('storage/male.png')}}" width="40px" height="40px">
                 <img v-else class="row rounded-circle" align="center"
-                     style=";margin-left: 20px;margin-right: 5px;margin-top: 5px;"
+                     style="margin-left: 0px;margin-right: 5px"
                      :src="getImgUrl(friendInbox.picture_path)" width="40px"
                      height="40px">
-                <p style="font-weight: bold">@{{friendInbox.name}}</p>
+                <p style="font-weight: bold;align-self: center;margin-bottom: 0px">@{{friendInbox.name}}</p>
             </div>
-            <div class="card-body">
-                <chat-box v-bind:receiver_id="friendInbox.id"></chat-box>
-            </div>
+            <chat-box class="card-body" :receiver_id="friendInbox.id"
+                      :room_id="chatRoom.id"></chat-box>
         </div>
         <div class="modal fade" tabindex="-1" role="dialog" id="edit-modal">
             <div class="modal-dialog">

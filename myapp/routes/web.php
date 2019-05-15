@@ -118,12 +118,17 @@ Route::get('/getFriendList', function () {
     return $friend;
 })->name('getFriendId');
 
+Route::post('/postChatRoom', 'ChatController@postChatRoom')->name('postChatRoom');
+
 Route::get('/dashboard/count', function () {
     return App\Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
 });
 
-//Route::get('test-broadcast', function () {
-//    broadcast(new App\Events\PrivateEvent(Auth::user()));
+//Route::get('test', function () {
+//    $check = DB::table('rooms')->where('users', [1,2]);
+//    if (!$check){
+//        return 'khong trung';
+//    } else return 'trung';
 //});
 
 Route::get('/home', 'HomeController@index')->name('home');

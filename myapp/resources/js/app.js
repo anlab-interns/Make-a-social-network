@@ -49,6 +49,9 @@ const app = new Vue({
         user_id: null,
         friends: [],
         friendInbox: null,
+        chatRoom: null,
+        isInbox: false,
+        inboxId: null,
         inboxWindowVisibility: 'hidden',
         allUsers: []
     },
@@ -108,11 +111,26 @@ const app = new Vue({
         getFriendInbox(friend) {
             this.friendInbox = friend;
         },
-        displayInboxWindow() {
-            if (this.inboxWindowVisibility === 'hidden') {
-                this.inboxWindowVisibility = 'visible'
-            } else if (this.inboxWindowVisibility === 'visible') {
-                this.inboxWindowVisibility = 'hidden'
+        postChatRoom(id) {
+            axios.post('/postChatRoom', {
+                creater_id: this.currentUserLogin.id,
+                member_id: id
+            })
+                .then(response => {
+                    console.log(response.data);
+                    this.chatRoom = null;
+                    this.chatRoom = response.data
+                })
+                .catch(error => {
+
+                })
+        },
+        displayInboxWindow(item) {
+            if (app.inboxId !== item) {
+                app.inboxId = item;
+                app.isInbox = true;
+            } else {
+                app.isInbox = !app.isInbox;
             }
         },
         addPost: function () {
@@ -161,7 +179,6 @@ const app = new Vue({
                 });
         },
         addComment: function (post, key) {
-            // alert(this.commentData);
             axios.post(this.bUrl + '/addComment', {
                 comment: this.commentData[key],
                 id: post.id
