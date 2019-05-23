@@ -20,7 +20,7 @@
                                 <div class="col-md-2">
                                     @if (($ulist->picture_path == ''))
                                         <img class="row rounded-circle" align="center"
-                                             style="margin-top: 0px;margin-right: 5px;margin-left: 5px"
+                                             style="margin-top: 0px;margin-right: 5px;margin-left: 20px"
                                              src="{{asset('storage/male.png')}}" width="80px" height="80px">
                                     @else
                                         <img class="row rounded-circle" align="center"
@@ -37,7 +37,9 @@
                                     </p>
                                 </div>
                                 <div class="figure-caption" align="center">
-                                    <p><a href="{{route('removeFriend',[$ulist->requester])}}" class="btn btn-success">Unfriend</a>
+                                    <p>
+                                        <a href="{{route('removeFriend',['user_requested' => $ulist->user_requested, 'requester' => $ulist->requester])}}"
+                                           class="btn btn-success">Unfriend</a>
                                     </p>
 
                                 </div>

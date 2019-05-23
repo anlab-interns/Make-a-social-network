@@ -2,25 +2,24 @@
     <div style="flex-direction: column;height:400px;padding: 0px;">
         <div class="messages" style="height: 67%;overflow-y: scroll;overflow-x: hidden">
             <div class="messages-content" style="margin-left: 10px">
-                <ChatItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatItem>
+                <ChatBoxItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatBoxItem>
             </div>
         </div>
         <div style="flex: 0 1 40px;width: 100%;padding: 10px;position: relative;">
             <input type="text" v-model="message" class="message-input" @keyup.enter="sendMessage"
                    placeholder="Type message..."/>
-            <!--            <button type="button" class="message-submit" @click="sendMessage">Send</button>-->
         </div>
 
     </div>
 </template>
 
 <script>
-    import ChatItem from './ChatItem.vue'
+    import ChatBoxItem from './ChatBoxItem.vue'
 
     export default {
         props: ['receiver_id', 'room_id'],
         components: {
-            ChatItem
+            ChatBoxItem
         },
         data() {
             return {

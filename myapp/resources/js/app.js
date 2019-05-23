@@ -45,6 +45,8 @@ const app = new Vue({
         commentData: {},
         showComment: null,
         index: false,
+        isDislike: false,
+        dislike: null,
         currentUserLogin: {},
         user_id: null,
         friends: [],
@@ -163,6 +165,7 @@ const app = new Vue({
                 .then(response => {
                     console.log(response);
                     // show if success
+                    app.posts = response.data;
                 })
                 .catch(function (error) {
                     console.log(error); // run if we have error
@@ -184,7 +187,7 @@ const app = new Vue({
                 id: post.id
             })
                 .then((response) => {
-                    app.commentData = "";
+                    app.commentData = {};
                     console.log(response); // show if success
                     if (response.status === 200) {
                         app.posts = response.data;
@@ -201,6 +204,18 @@ const app = new Vue({
                 app.index = true;
             } else {
                 app.index = !app.index;
+            }
+
+        },
+        dislikeToggle: function (item, id) {
+
+            if (app.dislike !== item) {
+                app.dislike = item;
+                app.isDislike = true;
+
+            } else {
+                app.isDislike = !app.isDislike;
+                this.deleteLike(id);
             }
 
         },

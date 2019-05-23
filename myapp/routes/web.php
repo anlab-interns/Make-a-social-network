@@ -79,7 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/requestRemove/{id}', 'FriendController@requestRemove')->name('requestRemove');
 
-    Route::get('/removeFriend/{id}', 'FriendController@removeFriend')->name('removeFriend');
+    Route::get('/removeFriend/{user_requested}/{requester}', 'FriendController@removeFriend')->name('removeFriend');
 
     Route::get('/addFriendNotifications/{id}', 'FriendController@addFriendNotifications')->name('addFriendNotifications');
 

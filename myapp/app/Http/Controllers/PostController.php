@@ -89,6 +89,11 @@ class PostController extends Controller
             ->where('id', $post_id)
             ->where('user_id', $uid)
             ->delete();
+        $comment = DB::table('comments')
+            ->where('post_id', $post_id)
+            ->where('user_id', $uid)
+            ->delete();
+        $dislike = DB::table('likes')->where('post_id', $post_id)->where('user_id', $uid)->delete();
         if ($post) {
             return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
         }
@@ -98,22 +103,25 @@ class PostController extends Controller
     public function deleteLike($post_id)
     {
         $uid = Auth::user()->id;
-        $like = DB::table('likes')->where('post_id', $post_id)->where('user_id', $uid)->delete();
-        if ($like) {
-            return redirect()->route('dashboard');
+        $dislike = DB::table('likes')->where('post_id', $post_id)->where('user_id', $uid)->delete();
+        if ($dislike) {
+            return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
         }
-        return redirect()->route('dashboard');
+        return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
     }
     public function likePost($id)
     {
-        $likePost = DB::table('likes')->insert([
-            'post_id' => $id,
-            'user_id' => Auth::user()->id,
-        ]);
-        if ($likePost) {
-            return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
+        $check = DB::table('likes')->where('post_id', $id)->where('user_id', Auth::user()->id)->first();
+        if (!$check) {
+            $likePost = DB::table('likes')->insert([
+                'post_id' => $id,
+                'user_id' => Auth::user()->id,
+            ]);
+            if ($likePost) {
+                return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
+            }
         }
-
+        return Post::with('user', 'likes', 'comments')->orderBy('created_at', 'DESC')->get();
     }
 
     public function addComment(Request $request)

@@ -80,12 +80,14 @@
                                  height="120px">
                             <hr>
                             <div style="display: flex;flex-direction: row;margin-bottom: 10px;border-bottom:1px solid #ddd">
-                                <a href="#" v-if="post.likes.length!=0" style="flex: 1;text-align: center;color: gray">
+                                <a href="#" v-if="post.likes.length!=0"
+                                   style="flex: 1;text-align: center;color: gray" @click="deleteLike(post.id)">
                                     <i class="fa fa-thumbs-up" style="color: blue;"></i>
                                     Thích
                                     <b style="color: green">@{{ post.likes.length }}</b>
                                 </a>
-                                <a href="#" v-else class="likeBtn" @click="likePost(post.id)"
+                                <a href="#" v-else class="likeBtn"
+                                   @click="likePost(post.id)"
                                    style="flex: 1;text-align: center;color: gray">
                                     <i class="fa fa-thumbs-up"></i>
                                     Thích

@@ -104,13 +104,19 @@ class FriendController extends Controller
         }
     }
 
-    public function removeFriend($id)
+    public function removeFriend($user_requested, $requester)
     {
         $uid = Auth::user()->id;
         $removeFriend = DB::table('friends')
-            ->where('user_requested', $uid)
-            ->where('requester', $id)
-            ->update(['status' => 0]);
+            ->where(function ($q) use ($uid, $user_requested, $requester) {
+                $q->where(function ($querry) use ($uid, $user_requested) {
+                    $querry->where('user_requested', $user_requested)
+                        ->where('requester', $uid);
+                })->orWhere(function ($querry) use ($uid, $requester) {
+                    $querry->where('user_requested', $uid)
+                        ->where('requester', $requester);
+                });
+            })->update(['status' => 0]);
         if ($removeFriend) {
             return back()->with('msg', 'Friend relationship has been deleted');
         } else {

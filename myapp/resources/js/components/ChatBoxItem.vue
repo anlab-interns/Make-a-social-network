@@ -14,7 +14,7 @@
              height="40px">
         <div class="message message-item row"
              :class="{'is-current-user': $root.currentUserLogin.id === message.user.id}"
-             style="word-break: break-word;display: flex;align-items: center;">
+             style="word-break: break-word;display: flex;align-items: center;width: 65%">
             {{ message.message }}
         </div>
     </div>

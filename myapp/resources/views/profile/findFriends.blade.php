@@ -18,14 +18,11 @@
                         @endif
                         <div class="col-sm-12 col-md-12"></div>
                         @foreach($all_users as $ulist)
-                            {{--@if(session('status'))--}}
-                            {{--@if($data == $ulist->id)--}}
-                            {{--@endif--}}
                             <?php
                             $test = DB::table('friends')->where('user_requested', '=', $ulist->id)
                                 ->where('requester', '=', Auth::user()->id)
                                 ->where('status', '=', 0)->first();
-                            if ($test != ''){
+                            if (!$test){
                             //                                dd($test)
                             ?>
                             <div class="row " style="border-bottom:1px solid #ccc; margin-bottom:15px">
@@ -52,7 +49,7 @@
                                     ->where('requester', '=', Auth::user()->id)
                                     ->first();
                                 ;
-                                if($check == ''){
+                                if(!$check){
                                 ?>
 
                                 <div class="figure-caption" align="center">
